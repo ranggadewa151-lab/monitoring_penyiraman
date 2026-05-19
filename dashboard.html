@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Utama</title>
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:'Poppins', sans-serif;
+    }
+
+    body{
+      display:flex;
+      background:linear-gradient(to right,#f8f8f8,#dff5e8);
+    }
+
+    /* ================= SIDEBAR ================= */
+
+    .sidebar{
+      width:260px;
+      height:100vh;
+      background:white;
+      padding:30px 20px;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      box-shadow:2px 0 10px rgba(0,0,0,0.05);
+    }
+
+    .logo{
+      font-size:22px;
+      font-weight:700;
+      color:#09a35b;
+      margin-bottom:40px;
+      line-height:1.4;
+    }
+
+    .menu a{
+      display:block;
+      text-decoration:none;
+      color:#6b7280;
+      padding:16px;
+      border-radius:12px;
+      margin-bottom:10px;
+      font-size:18px;
+      transition:0.3s;
+    }
+
+    .menu a:hover,
+    .active{
+      background:#e8faf0;
+      color:#09a35b;
+      font-weight:600;
+    }
+
+    .menu i{
+      margin-right:12px;
+    }
+
+    .logout{
+      color:#ef4444 !important;
+    }
+
+    /* ================= MAIN ================= */
+
+    .main{
+      flex:1;
+      padding:35px;
+    }
+
+    .top{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:25px;
+    }
+
+    .title{
+      font-size:42px;
+      font-weight:700;
+      color:#111827;
+    }
+
+    .subtitle{
+      color:#6b7280;
+      margin-top:5px;
+      font-size:15px;
+    }
+
+    .profile{
+      background:white;
+      padding:12px 20px;
+      border-radius:15px;
+      display:flex;
+      align-items:center;
+      gap:12px;
+      box-shadow:0 5px 15px rgba(0,0,0,0.05);
+      font-weight:600;
+    }
+
+    .profile i{
+      background:#dff5e8;
+      color:#09a35b;
+      padding:12px;
+      border-radius:12px;
+    }
+
+    /* ================= DASHBOARD ================= */
+
+    .dashboard{
+      display:flex;
+      gap:20px;
+      align-items:stretch;
+    }
+
+    /* ================= MONITORING CARD ================= */
+
+    .monitoring-card{
+      flex:2;
+      background:white;
+      border-radius:30px;
+      padding:25px;
+      box-shadow:0 5px 20px rgba(0,0,0,0.05);
+    }
+
+    .live{
+      color:#09a35b;
+      font-weight:600;
+      margin-bottom:15px;
+      letter-spacing:2px;
+      font-size:14px;
+    }
+
+    .monitoring-card h2{
+      font-size:28px;
+      margin-bottom:5px;
+      color:#111827;
+    }
+
+    .monitoring-card p{
+      color:#6b7280;
+      margin-bottom:15px;
+    }
+
+    .sensor-title{
+      font-size:17px;
+      color:#374151;
+      margin-top:15px;
+      font-weight:600;
+    }
+
+    .status{
+      display:inline-block;
+      background:#dcfce7;
+      color:#15803d;
+      padding:6px 16px;
+      border-radius:20px;
+      font-size:13px;
+      font-weight:600;
+      margin-top:10px;
+      margin-bottom:10px;
+    }
+
+    .percent{
+      font-size:50px;
+      font-weight:700;
+      margin-top:5px;
+      color:#111827;
+    }
+
+    .percent span{
+      font-size:28px;
+      color:#9ca3af;
+    }
+
+    .progress{
+      width:100%;
+      height:10px;
+      background:#e5e7eb;
+      border-radius:20px;
+      overflow:hidden;
+      margin-top:10px;
+      margin-bottom:10px;
+    }
+
+    .progress-bar{
+      height:100%;
+      background:linear-gradient(to right,#09a35b,#5ee7a1);
+    }
+
+    .level{
+      display:flex;
+      justify-content:space-between;
+      margin-top:10px;
+      color:#6b7280;
+      font-weight:600;
+      font-size:13px;
+    }
+
+    /* ================= PUMP CARD ================= */
+
+    .right{
+      flex:1;
+      display:flex;
+      flex-direction:column;
+      gap:15px;
+    }
+
+    .pump-card{
+      width:100%;
+      background:linear-gradient(to right,#2d143f,#1f2937);
+      color:white;
+      padding:22px;
+      border-radius:30px;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      flex:1;
+      box-shadow:0 5px 20px rgba(0,0,0,0.08);
+    }
+
+    .pump-title{
+      font-size:18px;
+      margin-bottom:15px;
+      color:#d1d5db;
+    }
+
+    .pump-status{
+      font-size:50px;
+      font-weight:700;
+      color:#fb7185;
+    }
+
+    .auto{
+      background:rgba(255,255,255,0.1);
+      display:inline-block;
+      padding:10px 18px;
+      border-radius:10px;
+      margin-top:15px;
+      width:fit-content;
+      font-size:14px;
+    }
+
+    .pump-card p{
+      margin-top:20px;
+      color:#d1d5db;
+      font-size:14px;
+    }
+
+    /* ================= RESPONSIVE ================= */
+
+    @media(max-width:900px){
+
+      body{
+        flex-direction:column;
+      }
+
+      .sidebar{
+        width:100%;
+        height:auto;
+      }
+
+      .dashboard{
+        flex-direction:column;
+      }
+
+      .title{
+        font-size:32px;
+      }
+
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <!-- ================= SIDEBAR ================= -->
+
+  <div class="sidebar">
+
+    <div>
+
+      <div class="logo">
+        Monitoring Kelembapan Tanah Dan Penyiraman Otomatis
+      </div>
+
+      <div class="menu">
+        <a href="#" class="active">
+          <i class="fa-solid fa-house"></i> Dashboard
+        </a>
+
+        <a href="riwayat.html">
+          <i class="fa-solid fa-clock-rotate-left"></i> Riwayat
+        </a>
+
+        <a href="aturbatas.html">
+          <i class="fa-solid fa-sliders"></i> Atur Batas
+        </a>
+
+        <a href="profil.html">
+          <i class="fa-solid fa-user"></i> Profil
+        </a>
+      </div>
+
+    </div>
+
+    <div class="menu">
+      <a href="index.html" class="logout">
+        <i class="fa-solid fa-right-from-bracket"></i> Keluar
+      </a>
+    </div>
+
+  </div>
+
+  <!-- ================= MAIN ================= -->
+
+  <div class="main">
+
+    <div class="top">
+
+      <div>
+        <div class="title">Dashboard Utama</div>
+
+        <div class="subtitle">
+          Pantau kondisi tanah dan sistem penyiraman otomatis.
+        </div>
+      </div>
+
+      <div class="profile">
+        <i class="fa-solid fa-user"></i>
+        <span id="profileUsername"></span>
+      </div>
+
+    </div>
+
+    <!-- ================= DASHBOARD ================= -->
+
+    <div class="dashboard">
+
+      <!-- ================= SENSOR ================= -->
+
+      <div class="monitoring-card">
+
+        <div class="live">● LIVE MONITORING</div>
+
+        <h2>Kelembapan Tanah</h2>
+
+        <p>Update real-time dari 2 sensor.</p>
+
+        <!-- SENSOR 1 -->
+
+        <div class="sensor-title">Sensor 1</div>
+
+        <div class="status" id="sensor1Status">MEMUAT...</div>
+
+        <div class="percent"><span id="sensor1Value">--</span><span>%</span></div>
+
+        <div class="progress">
+          <div class="progress-bar" id="sensor1Bar" style="width:0%"></div>
+        </div>
+
+        <div class="level">
+          <span>KERING</span>
+          <span>LEMBAP</span>
+          <span>BASAH</span>
+        </div>
+
+        <!-- SENSOR 2 -->
+
+        <div class="sensor-title">Sensor 2</div>
+
+        <div class="status" id="sensor2Status">MEMUAT...</div>
+
+        <div class="percent"><span id="sensor2Value">--</span><span>%</span></div>
+
+        <div class="progress">
+          <div class="progress-bar" id="sensor2Bar" style="width:0%"></div>
+        </div>
+
+        <div class="level">
+          <span>KERING</span>
+          <span>LEMBAP</span>
+          <span>BASAH</span>
+        </div>
+
+      </div>
+
+      <!-- ================= POMPA ================= -->
+
+      <div class="right">
+
+        <!-- POMPA 1 -->
+        <div class="pump-card">
+
+          <div class="pump-title">
+            POMPA AIR 1
+          </div>
+
+          <div class="pump-status" id="pumpStatus">
+            MEMUAT...
+          </div>
+
+          <div class="auto">
+            ● Otomatis
+          </div>
+
+          <p id="pumpLastTime">
+            Penyiraman terakhir: -
+          </p>
+
+        </div>
+
+        <!-- POMPA 2 -->
+        <div class="pump-card">
+
+          <div class="pump-title">
+            POMPA AIR 2
+          </div>
+
+          <div class="pump-status" id="pump2Status">
+            MEMUAT...
+          </div>
+
+          <div class="auto">
+            ● Otomatis
+          </div>
+
+          <p id="pump2LastTime">
+            Penyiraman terakhir: -
+          </p>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <script type="module">
+
+    import { db, ref, onValue, set } from "./firebase.js";
+
+    // ================= USER PROFILE (localStorage) =================
+    let loginUser = localStorage.getItem("loginUser");
+    document.getElementById("profileUsername").innerText = loginUser;
+
+    console.log("🔥 Firebase: Menghubungkan ke database...");
+
+    // ================= HELPER: Tentukan status berdasarkan kelembapan =================
+    function getStatus(value, batasKering, batasLembab) {
+      if (value <= batasKering) return { text: "KERING", color: "#dc2626", bg: "#fee2e2" };
+      if (value <= batasLembab) return { text: "LEMBAP", color: "#15803d", bg: "#dcfce7" };
+      return { text: "BASAH", color: "#2563eb", bg: "#dbeafe" };
+    }
+
+    // ================= UPDATE UI SENSOR =================
+    function updateSensor(sensorNum, data) {
+      const kelembapan = data.kelembapan ?? 0;
+      const batasKering = data.bataskering ?? 30;
+      const batasLembab = data.batslembab ?? 60;
+      const status = getStatus(kelembapan, batasKering, batasLembab);
+
+      document.getElementById("sensor" + sensorNum + "Value").textContent = kelembapan;
+      document.getElementById("sensor" + sensorNum + "Bar").style.width = kelembapan + "%";
+      const statusEl = document.getElementById("sensor" + sensorNum + "Status");
+      statusEl.textContent = status.text;
+      statusEl.style.background = status.bg;
+      statusEl.style.color = status.color;
+    }
+
+    function showSensorError(sensorNum, message) {
+      document.getElementById("sensor" + sensorNum + "Value").textContent = "0";
+      document.getElementById("sensor" + sensorNum + "Bar").style.width = "0%";
+      const statusEl = document.getElementById("sensor" + sensorNum + "Status");
+      statusEl.textContent = message;
+      statusEl.style.background = "#fef3c7";
+      statusEl.style.color = "#d97706";
+    }
+
+    // ================= SENSOR 1: Realtime dari Firebase =================
+    const sensor1Ref = ref(db, "/sensor1");
+    onValue(sensor1Ref, (snapshot) => {
+      const data = snapshot.val();
+      console.log("📡 Sensor 1 data:", data);
+
+      if (!data) {
+        showSensorError(1, "BELUM ADA DATA");
+        return;
+      }
+      updateSensor(1, data);
+    }, (error) => {
+      console.error("❌ Sensor 1 error:", error.message);
+      showSensorError(1, "ERROR: " + error.code);
+      alert("Firebase Error pada Sensor 1: " + error.message + "\n\nPastikan Rules di Firebase Console diset:\n{\n  \"rules\": {\n    \".read\": true,\n    \".write\": true\n  }\n}");
+    });
+
+    // ================= SENSOR 2: Realtime dari Firebase =================
+    const sensor2Ref = ref(db, "/sensor2");
+    onValue(sensor2Ref, (snapshot) => {
+      const data = snapshot.val();
+      console.log("📡 Sensor 2 data:", data);
+
+      if (!data) {
+        showSensorError(2, "BELUM ADA DATA");
+        return;
+      }
+      updateSensor(2, data);
+    }, (error) => {
+      console.error("❌ Sensor 2 error:", error.message);
+      showSensorError(2, "ERROR: " + error.code);
+    });
+
+    // ================= HELPER: Update Pompa UI =================
+    function updatePompa(statusElId, timeElId, data) {
+      const pumpStatusEl = document.getElementById(statusElId);
+      const pumpLastTimeEl = document.getElementById(timeElId);
+
+      if (!data) {
+        pumpStatusEl.textContent = "BELUM ADA DATA";
+        pumpStatusEl.style.color = "#d97706";
+        pumpLastTimeEl.textContent = "Penyiraman terakhir: -";
+        return;
+      }
+
+      const statusPompa = data.status || "MATI";
+      const terakhir = data.terakhir || "-";
+
+      pumpStatusEl.textContent = statusPompa;
+      pumpStatusEl.style.color = statusPompa === "MENYALA" ? "#4ade80" : "#fb7185";
+      pumpLastTimeEl.textContent = "Penyiraman terakhir: " + terakhir;
+    }
+
+    // ================= POMPA 1: Realtime dari Firebase =================
+    const pompaRef = ref(db, "/pompa");
+    onValue(pompaRef, (snapshot) => {
+      const data = snapshot.val();
+      console.log("📡 Pompa 1 data:", data);
+      updatePompa("pumpStatus", "pumpLastTime", data);
+    }, (error) => {
+      console.error("❌ Pompa 1 error:", error.message);
+      document.getElementById("pumpStatus").textContent = "ERROR";
+      document.getElementById("pumpStatus").style.color = "#dc2626";
+    });
+
+    // ================= POMPA 2: Realtime dari Firebase =================
+    const pompa2Ref = ref(db, "/pompa2");
+    onValue(pompa2Ref, (snapshot) => {
+      const data = snapshot.val();
+      console.log("📡 Pompa 2 data:", data);
+      updatePompa("pump2Status", "pump2LastTime", data);
+    }, (error) => {
+      console.error("❌ Pompa 2 error:", error.message);
+      document.getElementById("pump2Status").textContent = "ERROR";
+      document.getElementById("pump2Status").style.color = "#dc2626";
+    });
+
+  </script>
+
+</body>
+</html>

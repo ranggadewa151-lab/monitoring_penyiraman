@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Data Firebase</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+    body{min-height:100vh;background:linear-gradient(to right,#f4f4f4,#dff5e8);display:flex;justify-content:center;align-items:center;padding:20px;}
+    .container{background:white;padding:40px;border-radius:20px;box-shadow:0 10px 30px rgba(0,0,0,0.1);max-width:600px;width:100%;}
+    h1{color:#09a35b;font-size:24px;margin-bottom:10px;}
+    p{color:#6b7280;margin-bottom:25px;font-size:14px;}
+    .btn{width:100%;height:55px;border:none;border-radius:15px;color:white;font-size:16px;font-weight:600;cursor:pointer;margin-bottom:12px;transition:0.3s;}
+    .btn:hover{transform:scale(1.02);}
+    .btn-green{background:#09a35b;}
+    .btn-blue{background:#2563eb;}
+    .btn-red{background:#dc2626;}
+    .btn-orange{background:#d97706;}
+    .log{background:#f9fafb;border-radius:12px;padding:15px;margin-top:20px;font-size:13px;color:#374151;max-height:200px;overflow-y:auto;white-space:pre-wrap;}
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>🔥 Test Data Firebase</h1>
+    <p>Klik tombol di bawah untuk menulis data contoh ke Firebase Realtime Database.</p>
+
+    <button class="btn btn-green" onclick="isiDataSensor()">
+      📡 Isi Data Sensor (Sensor 1 = 75%, Sensor 2 = 60%)
+    </button>
+
+    <button class="btn btn-blue" onclick="isiDataPompa()">
+      💧 Isi Data Pompa 1 (Status: MATI) & Pompa 2 (Status: MENYALA)
+    </button>
+
+    <button class="btn btn-orange" onclick="isiDataBatas()">
+      ⚙️ Isi Data Batas (Kering: 30, Lembab: 60)
+    </button>
+
+    <button class="btn btn-green" onclick="isiDataRiwayat()">
+      📋 Isi Data Riwayat (3 entri contoh)
+    </button>
+
+    <button class="btn btn-red" onclick="isiSemuaData()">
+      🚀 ISI SEMUA DATA SEKALIGUS
+    </button>
+
+    <div class="log" id="log">Klik tombol untuk mulai...</div>
+  </div>
+
+  <script type="module">
+    import { db, ref, set, push } from "./firebase.js";
+
+    const logEl = document.getElementById("log");
+    function log(msg) {
+      logEl.textContent += "\n" + msg;
+      logEl.scrollTop = logEl.scrollHeight;
+      console.log(msg);
+    }
+
+    // ===== SENSOR =====
+    window.isiDataSensor = async function() {
+      try {
+        await set(ref(db, "/sensor1"), {
+          kelembapan: 75,
+          bataskering: 30,
+          batslembab: 60
+        });
+        log("✅ Sensor 1 berhasil ditulis (kelembapan: 75%)");
+
+        await set(ref(db, "/sensor2"), {
+          kelembapan: 60,
+          bataskering: 30,
+          batslembab: 60
+        });
+        log("✅ Sensor 2 berhasil ditulis (kelembapan: 60%)");
+      } catch (e) {
+        log("❌ Error: " + e.message);
+      }
+    }
+
+    // ===== POMPA =====
+    window.isiDataPompa = async function() {
+      try {
+        await set(ref(db, "/pompa"), {
+          status: "MATI",
+          terakhir: "22:26 WIB"
+        });
+        log("✅ Pompa 1 berhasil ditulis (status: MATI)");
+
+        await set(ref(db, "/pompa2"), {
+          status: "MENYALA",
+          terakhir: "22:30 WIB"
+        });
+        log("✅ Pompa 2 berhasil ditulis (status: MENYALA)");
+      } catch (e) {
+        log("❌ Error: " + e.message);
+      }
+    }
+
+    // ===== BATAS =====
+    window.isiDataBatas = async function() {
+      try {
+        await set(ref(db, "/sensor1/bataskering"), 30);
+        await set(ref(db, "/sensor1/batslembab"), 60);
+        await set(ref(db, "/sensor2/bataskering"), 30);
+        await set(ref(db, "/sensor2/batslembab"), 60);
+        log("✅ Batas berhasil ditulis untuk kedua sensor");
+      } catch (e) {
+        log("❌ Error: " + e.message);
+      }
+    }
+
+    // ===== RIWAYAT =====
+    window.isiDataRiwayat = async function() {
+      try {
+        const riwayatRef = ref(db, "/riwayat");
+        await push(riwayatRef, {
+          waktu: "18 Mei 2026 - 08:10",
+          sensor1: 35,
+          sensor2: 40,
+          status: "KERING",
+          pompa: "MENYALA"
+        });
+        await push(riwayatRef, {
+          waktu: "18 Mei 2026 - 09:15",
+          sensor1: 72,
+          sensor2: 68,
+          status: "LEMBAP",
+          pompa: "MATI"
+        });
+        await push(riwayatRef, {
+          waktu: "18 Mei 2026 - 10:40",
+          sensor1: 90,
+          sensor2: 88,
+          status: "BASAH",
+          pompa: "MATI"
+        });
+        log("✅ 3 entri riwayat berhasil ditulis");
+      } catch (e) {
+        log("❌ Error: " + e.message);
+      }
+    }
+
+    // ===== SEMUA =====
+    window.isiSemuaData = async function() {
+      log("\n🚀 Menulis semua data...");
+      await window.isiDataSensor();
+      await window.isiDataPompa();
+      await window.isiDataRiwayat();
+      log("\n🎉 SELESAI! Buka dashboard.html untuk lihat hasilnya.");
+    }
+  </script>
+
+</body>
+</html>

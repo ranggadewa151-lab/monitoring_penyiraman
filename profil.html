@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profil Pengguna</title>
+
+  <link rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:'Poppins', sans-serif;
+    }
+
+    body{
+      display:flex;
+      background:linear-gradient(to right,#f8f8f8,#dff5e8);
+    }
+
+    .sidebar{
+      width:260px;
+      height:100vh;
+      background:white;
+      padding:30px 20px;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      box-shadow:2px 0 10px rgba(0,0,0,0.05);
+    }
+
+    .logo{
+      font-size:22px;
+      font-weight:700;
+      color:#09a35b;
+      margin-bottom:40px;
+    }
+
+    .menu a{
+      display:block;
+      text-decoration:none;
+      color:#6b7280;
+      padding:16px;
+      border-radius:12px;
+      margin-bottom:10px;
+      font-size:18px;
+    }
+
+    .menu a:hover,
+    .active{
+      background:#e8faf0;
+      color:#09a35b;
+      font-weight:600;
+    }
+
+    .menu i{
+      margin-right:12px;
+    }
+
+    .logout{
+      color:#ef4444 !important;
+    }
+
+    .main{
+      flex:1;
+      padding:40px;
+    }
+
+    .title{
+      font-size:50px;
+      font-weight:700;
+    }
+
+    .subtitle{
+      color:#6b7280;
+      margin-top:8px;
+      font-size:18px;
+      margin-bottom:60px;
+    }
+
+    .profile-container{
+      display:flex;
+      justify-content:center;
+      align-items:flex-start;
+      gap:40px;
+    }
+
+    .profile-info{
+      width:320px;
+    }
+
+    .avatar{
+      width:120px;
+      height:120px;
+      background:#dff5e8;
+      border-radius:50%;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      margin-bottom:25px;
+    }
+
+    .avatar i{
+      font-size:55px;
+      color:#09a35b;
+    }
+
+    .info-title{
+      font-size:34px;
+      font-weight:700;
+      margin-bottom:30px;
+    }
+
+    .info-text{
+      font-size:22px;
+      margin-bottom:22px;
+    }
+
+    .security-card{
+      width:500px;
+      background:white;
+      border-radius:30px;
+      padding:40px;
+      box-shadow:0 5px 20px rgba(0,0,0,0.05);
+    }
+
+    .security-title{
+      font-size:32px;
+      font-weight:700;
+      margin-bottom:30px;
+    }
+
+    .label{
+      font-size:14px;
+      font-weight:600;
+      margin-bottom:10px;
+      display:block;
+    }
+
+    .input-box{
+      width:100%;
+      height:62px;
+      border:2px solid #e5e7eb;
+      border-radius:16px;
+      display:flex;
+      align-items:center;
+      padding:0 20px;
+      margin-bottom:22px;
+    }
+
+    .input-box i{
+      margin-right:15px;
+    }
+
+    .input-box input{
+      width:100%;
+      border:none;
+      outline:none;
+      font-size:17px;
+    }
+
+    .save-btn{
+      width:100%;
+      height:62px;
+      border:none;
+      border-radius:16px;
+      background:#09a35b;
+      color:white;
+      font-size:20px;
+      cursor:pointer;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="sidebar">
+    <div>
+      <div class="logo">
+        Monitoring Kelembapan<br>
+        Tanah Dan Penyiraman<br>
+        Otomatis
+      </div>
+
+      <div class="menu">
+        <a href="dashboard.html"><i class="fa-solid fa-house"></i> Dashboard</a>
+        <a href="riwayat.html"><i class="fa-solid fa-clock-rotate-left"></i> Riwayat</a>
+        <a href="aturbatas.html"><i class="fa-solid fa-sliders"></i> Atur Batas</a>
+        <a href="#" class="active"><i class="fa-solid fa-user"></i> Profil</a>
+      </div>
+    </div>
+
+    <div class="menu">
+      <a href="index.html" class="logout">
+        <i class="fa-solid fa-right-from-bracket"></i> Keluar
+      </a>
+    </div>
+  </div>
+
+  <div class="main">
+
+    <div class="title">Profil Pengguna</div>
+    <div class="subtitle">Informasi akun pengguna sistem monitoring.</div>
+
+    <div class="profile-container">
+
+      <div class="profile-info">
+
+        <div class="avatar">
+          <i class="fa-solid fa-user"></i>
+        </div>
+
+        <div class="info-title">Informasi Akun</div>
+
+        <div class="info-text">
+          <b>Username :</b>
+          <span id="profileUsername"></span>
+        </div>
+
+        <div class="info-text">
+          <b>Status Akun :</b> Aktif
+        </div>
+
+      </div>
+
+      <div class="security-card">
+
+        <div class="security-title">Keamanan Akun</div>
+
+        <label class="label">PASSWORD LAMA</label>
+        <div class="input-box">
+          <i class="fa-solid fa-lock"></i>
+          <input type="text" id="oldPassword" placeholder="Masukkan Password Lama">
+        </div>
+
+        <label class="label">PASSWORD BARU</label>
+        <div class="input-box">
+          <i class="fa-solid fa-lock"></i>
+          <input type="text" id="newPassword" placeholder="Masukkan Password Baru">
+        </div>
+
+        <label class="label">KONFIRMASI PASSWORD BARU</label>
+        <div class="input-box">
+          <i class="fa-solid fa-lock"></i>
+          <input type="text" id="confirmPassword" placeholder="Masukkan Password Baru Lagi">
+        </div>
+
+        <button class="save-btn" onclick="ubahPassword()">
+          Simpan Password Baru
+        </button>
+
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    let loginUser = localStorage.getItem("loginUser");
+    document.getElementById("profileUsername").innerText = loginUser;
+
+    function ubahPassword(){
+
+      let oldPassword = document.getElementById("oldPassword").value;
+      let newPassword = document.getElementById("newPassword").value;
+      let confirmPassword = document.getElementById("confirmPassword").value;
+
+      let savedPassword = localStorage.getItem("password");
+
+      if(oldPassword !== savedPassword){
+        alert("Password lama salah!");
+        return;
+      }
+
+      if(newPassword !== confirmPassword){
+        alert("Konfirmasi password tidak sama!");
+        return;
+      }
+
+      localStorage.setItem("password", newPassword);
+
+      alert("Password berhasil diubah!");
+
+      document.getElementById("oldPassword").value = "";
+      document.getElementById("newPassword").value = "";
+      document.getElementById("confirmPassword").value = "";
+    }
+  </script>
+
+</body>
+</html>

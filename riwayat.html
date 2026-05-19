@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Riwayat Monitoring</title>
+
+  <link rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:'Poppins', sans-serif;
+    }
+
+    body{
+      display:flex;
+      background:linear-gradient(to right,#f8f8f8,#dff5e8);
+    }
+
+    .sidebar{
+      width:260px;
+      height:100vh;
+      background:white;
+      padding:30px 20px;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      box-shadow:2px 0 10px rgba(0,0,0,0.05);
+    }
+
+    .logo{
+      font-size:22px;
+      font-weight:700;
+      color:#09a35b;
+      margin-bottom:40px;
+    }
+
+    .menu a{
+      display:block;
+      text-decoration:none;
+      color:#6b7280;
+      padding:16px;
+      border-radius:12px;
+      margin-bottom:10px;
+      font-size:18px;
+    }
+
+    .menu a:hover,
+    .active{
+      background:#e8faf0;
+      color:#09a35b;
+      font-weight:600;
+    }
+
+    .menu i{
+      margin-right:12px;
+    }
+
+    .logout{
+      color:#ef4444 !important;
+    }
+
+    .main{
+      flex:1;
+      padding:40px;
+    }
+
+    .top{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:30px;
+    }
+
+    .title{
+      font-size:45px;
+      font-weight:700;
+    }
+
+    .subtitle{
+      color:#6b7280;
+      margin-top:5px;
+    }
+
+    .profile{
+      background:white;
+      padding:12px 20px;
+      border-radius:15px;
+      display:flex;
+      align-items:center;
+      gap:12px;
+      box-shadow:0 5px 15px rgba(0,0,0,0.05);
+      font-weight:600;
+    }
+
+    .profile i{
+      background:#dff5e8;
+      color:#09a35b;
+      padding:12px;
+      border-radius:12px;
+    }
+
+    .table-container{
+      background:white;
+      border-radius:30px;
+      padding:30px;
+      box-shadow:0 5px 20px rgba(0,0,0,0.05);
+    }
+
+    table{
+      width:100%;
+      border-collapse:collapse;
+    }
+
+    th{
+      background:#09a35b;
+      color:white;
+      padding:18px;
+      text-align:left;
+      font-size:16px;
+    }
+
+    td{
+      padding:18px;
+      border-bottom:1px solid #e5e7eb;
+      color:#374151;
+    }
+
+    tr:hover{
+      background:#f9fafb;
+    }
+
+    .status{
+      padding:8px 15px;
+      border-radius:20px;
+      font-size:14px;
+      font-weight:600;
+      display:inline-block;
+    }
+
+    .kering{
+      background:#fee2e2;
+      color:#dc2626;
+    }
+
+    .lembap{
+      background:#dcfce7;
+      color:#15803d;
+    }
+
+    .basah{
+      background:#dbeafe;
+      color:#2563eb;
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+
+    <div>
+
+      <div class="logo">
+        Monitoring Kelembapan Tanah Dan Penyiraman Otomatis
+      </div>
+
+      <div class="menu">
+
+        <a href="dashboard.html">
+          <i class="fa-solid fa-house"></i> Dashboard
+        </a>
+
+        <a href="#" class="active">
+          <i class="fa-solid fa-clock-rotate-left"></i> Riwayat
+        </a>
+
+        <a href="aturbatas.html">
+          <i class="fa-solid fa-sliders"></i> Atur Batas
+        </a>
+
+        <a href="profil.html">
+          <i class="fa-solid fa-user"></i> Profil
+        </a>
+
+      </div>
+
+    </div>
+
+    <div class="menu">
+
+      <a href="index.html" class="logout">
+        <i class="fa-solid fa-right-from-bracket"></i> Keluar
+      </a>
+
+    </div>
+
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <div class="top">
+
+      <div>
+        <div class="title">Riwayat Monitoring</div>
+        <div class="subtitle">Data hasil monitoring kelembapan tanah.</div>
+      </div>
+
+      <div class="profile">
+        <i class="fa-solid fa-user"></i>
+        <span id="profileUsername"></span>
+      </div>
+
+    </div>
+
+    <!-- TABLE -->
+    <div class="table-container">
+
+      <table>
+
+        <thead>
+          <tr>
+            <th>No</th>
+            <th>Waktu</th>
+            <th>Sensor 1</th>
+            <th>Sensor 2</th>
+            <th>Status</th>
+            <th>Pompa</th>
+          </tr>
+        </thead>
+
+        <tbody id="riwayatBody">
+          <tr>
+            <td colspan="6" style="text-align:center;color:#9ca3af;padding:30px;">
+              Memuat data dari Firebase...
+            </td>
+          </tr>
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+  <script type="module">
+
+    import { db, ref, onValue, query, orderByChild, limitToLast } from "./firebase.js";
+
+    // ================= USER PROFILE (localStorage) =================
+    let loginUser = localStorage.getItem("loginUser");
+    document.getElementById("profileUsername").innerText = loginUser;
+
+    // ================= BACA RIWAYAT DARI FIREBASE =================
+    const riwayatRef = ref(db, "/riwayat");
+    onValue(riwayatRef, (snapshot) => {
+      const data = snapshot.val();
+      const tbody = document.getElementById("riwayatBody");
+
+      if (!data) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="6" style="text-align:center;color:#9ca3af;padding:30px;">
+              Belum ada data riwayat.
+            </td>
+          </tr>`;
+        return;
+      }
+
+      // Konversi object ke array
+      const entries = Object.keys(data).map(key => ({
+        id: key,
+        ...data[key]
+      }));
+
+      // Urutkan berdasarkan waktu (terbaru di atas)
+      entries.sort((a, b) => {
+        if (a.waktu && b.waktu) return b.waktu.localeCompare(a.waktu);
+        return 0;
+      });
+
+      // Generate tabel
+      let html = "";
+      entries.forEach((item, index) => {
+        const statusClass = (item.status || "").toLowerCase();
+        html += `
+          <tr>
+            <td>${index + 1}</td>
+            <td>${item.waktu || "-"}</td>
+            <td>${item.sensor1 || 0}%</td>
+            <td>${item.sensor2 || 0}%</td>
+            <td>
+              <span class="status ${statusClass}">${item.status || "-"}</span>
+            </td>
+            <td>${item.pompa || "-"}</td>
+          </tr>`;
+      });
+
+      tbody.innerHTML = html;
+    });
+
+  </script>
+
+</body>
+</html>

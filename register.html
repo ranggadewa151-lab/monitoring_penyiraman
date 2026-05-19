@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register EcoGarden</title>
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:'Poppins', sans-serif;
+    }
+
+    body{
+      height:100vh;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      background:linear-gradient(to right,#f4f4f4,#dff5e8);
+    }
+
+    .register-container{
+      width:90%;
+      max-width:900px;
+      background:white;
+      padding:50px 40px;
+      border-radius:20px;
+      box-shadow:0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    .logo{
+      text-align:center;
+      font-size:45px;
+      font-weight:700;
+      color:#05a660;
+      margin-bottom:10px;
+    }
+
+    .subtitle{
+      text-align:center;
+      letter-spacing:5px;
+      color:#5b6575;
+      font-size:18px;
+      font-weight:600;
+      margin-bottom:40px;
+    }
+
+    .label{
+      width:58%;
+      margin:0 auto 10px auto;
+      font-size:14px;
+      font-weight:600;
+      color:#5b6575;
+      display:block;
+      letter-spacing:2px;
+    }
+
+    .input-box{
+      width:60%;
+      height:65px;
+      border:2px solid #e5e5e5;
+      border-radius:15px;
+      display:flex;
+      align-items:center;
+      padding:0 20px;
+      margin:0 auto 25px auto;
+      transition:0.3s;
+    }
+
+    .input-box:focus-within{
+      border-color:#11b56b;
+      box-shadow:0 0 10px rgba(17,181,107,0.2);
+    }
+
+    .input-box i{
+      font-size:22px;
+      color:#11b56b;
+      margin-right:15px;
+    }
+
+    .input-box input{
+      width:100%;
+      border:none;
+      outline:none;
+      font-size:18px;
+      background:transparent;
+    }
+
+    .register-btn{
+      width:30%;
+      height:60px;
+      border:none;
+      border-radius:15px;
+      background:#09a35b;
+      color:white;
+      font-size:24px;
+      font-weight:600;
+      cursor:pointer;
+      transition:0.3s;
+      margin:10px auto 0 auto;
+      display:block;
+    }
+
+    .register-btn:hover{
+      background:#07884c;
+    }
+
+    .login-link{
+      text-align:center;
+      margin-top:25px;
+      color:#666;
+      font-size:15px;
+    }
+
+    .login-link a{
+      text-decoration:none;
+      color:#059657;
+      font-weight:600;
+    }
+
+  </style>
+</head>
+<script>
+
+function register(){
+
+  let username = document.getElementById("username").value;
+  let password = document.getElementById("password").value;
+  let confirmPassword = document.getElementById("confirmPassword").value;
+
+  if(username == "" || password == "" || confirmPassword == ""){
+    alert("Semua data harus diisi!");
+    return;
+  }
+
+  if(password !== confirmPassword){
+    alert("Password tidak sama!");
+    return;
+  }
+
+  // simpan ke localStorage
+  localStorage.setItem("username", username);
+  localStorage.setItem("password", password);
+
+  alert("Register berhasil!");
+
+  window.location.href = "index.html";
+}
+
+</script>
+<body>
+
+  <div class="register-container">
+
+    <div class="logo">
+      Monitoring Kelembapan Tanah Dan Penyiraman Otomatis.
+    </div>
+
+    <div class="subtitle">
+      HALAMAN REGISTER
+    </div>
+
+    <!-- Username -->
+<label class="label">USERNAME</label>
+
+<div class="input-box">
+  <i class="fa-solid fa-user"></i>
+  <input type="text" id="username"placeholder="Masukkan Username">
+</div>
+
+<!-- Password -->
+<label class="label">PASSWORD</label>
+
+<div class="input-box">
+  <i class="fa-solid fa-lock"></i>
+  <input type="password" id="password" placeholder="Masukkan Password">
+</div>
+
+<!-- Konfirmasi Password -->
+<label class="label">MASUKKAN PASSWORD LAGI</label>
+
+<div class="input-box">
+  <i class="fa-solid fa-lock"></i>
+  <input type="password" id="confirmPassword" placeholder="Masukkan Password Lagi">
+</div>
+
+    <!-- Button -->
+    <button class="register-btn" onclick="register()">
+      Daftar
+    </button>
+ <div class="login-link">
+      <a href="index.html">Kembali</a>
+    </div>
+  </div>
+
+</body>
+</html>

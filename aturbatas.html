@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Atur Ambang Batas</title>
+
+  <link rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:'Poppins', sans-serif;
+    }
+
+    body{
+      display:flex;
+      background:linear-gradient(to right,#f8f8f8,#dff5e8);
+    }
+
+    /* SIDEBAR */
+    .sidebar{
+      width:260px;
+      height:100vh;
+      background:white;
+      padding:30px 20px;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      box-shadow:2px 0 10px rgba(0,0,0,0.05);
+    }
+
+    .logo{
+      font-size:22px;
+      font-weight:700;
+      color:#09a35b;
+      margin-bottom:40px;
+    }
+
+    .menu a{
+      display:block;
+      text-decoration:none;
+      color:#6b7280;
+      padding:16px;
+      border-radius:12px;
+      margin-bottom:10px;
+      font-size:18px;
+    }
+
+    .menu a:hover,
+    .active{
+      background:#e8faf0;
+      color:#09a35b;
+      font-weight:600;
+    }
+
+    .menu i{
+      margin-right:12px;
+    }
+
+    .logout{
+      color:#ef4444 !important;
+    }
+
+    /* MAIN */
+    .main{
+      flex:1;
+      padding:40px;
+    }
+
+    .top{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:30px;
+    }
+
+    .title{
+      font-size:45px;
+      font-weight:700;
+    }
+
+    .subtitle{
+      color:#6b7280;
+      margin-top:5px;
+    }
+
+    .profile{
+      background:white;
+      padding:12px 20px;
+      border-radius:15px;
+      display:flex;
+      align-items:center;
+      gap:12px;
+      box-shadow:0 5px 15px rgba(0,0,0,0.05);
+      font-weight:600;
+    }
+
+    .profile i{
+      background:#dff5e8;
+      color:#09a35b;
+      padding:12px;
+      border-radius:12px;
+    }
+
+    /* CONTAINER */
+    .container{
+      display:flex;
+      gap:25px;
+      flex-wrap:wrap;
+    }
+
+    .card{
+      background:white;
+      border-radius:30px;
+      padding:40px;
+      box-shadow:0 5px 20px rgba(0,0,0,0.05);
+      flex:1;
+      min-width:320px;
+    }
+
+    .section-title{
+      font-size:20px;
+      font-weight:700;
+      margin-bottom:20px;
+      color:#111827;
+    }
+
+    .input-group{
+      margin-bottom:20px;
+    }
+
+    .input-group label{
+      display:block;
+      margin-bottom:10px;
+      font-weight:600;
+      color:#374151;
+    }
+
+    .input-box{
+      width:100%;
+      height:60px;
+      border:2px solid #e5e7eb;
+      border-radius:15px;
+      padding:0 20px;
+      font-size:18px;
+      outline:none;
+    }
+
+    .input-box:focus{
+      border-color:#09a35b;
+      box-shadow:0 0 10px rgba(9,163,91,0.2);
+    }
+
+    /* BUTTON CENTER */
+    .btn-container{
+      width:100%;
+      display:flex;
+      justify-content:center;
+      margin-top:25px;
+    }
+
+    .save-btn{
+      width:300px;
+      height:60px;
+      border:none;
+      border-radius:15px;
+      background:#09a35b;
+      color:white;
+      font-size:18px;
+      font-weight:600;
+      cursor:pointer;
+      transition:0.3s;
+    }
+
+    .save-btn:hover{
+      background:#07884c;
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+
+    <div>
+      <div class="logo">
+        Monitoring Kelembapan Tanah Dan Penyiraman Otomatis
+      </div>
+
+      <div class="menu">
+
+        <a href="dashboard.html"><i class="fa-solid fa-house"></i> Dashboard</a>
+        <a href="riwayat.html"><i class="fa-solid fa-clock-rotate-left"></i> Riwayat</a>
+        <a href="#" class="active"><i class="fa-solid fa-sliders"></i> Atur Batas</a>
+        <a href="profil.html"><i class="fa-solid fa-user"></i> Profil</a>
+
+      </div>
+    </div>
+
+    <div class="menu">
+      <a href="index.html" class="logout">
+        <i class="fa-solid fa-right-from-bracket"></i> Keluar
+      </a>
+    </div>
+
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <div class="top">
+
+      <div>
+        <div class="title">Atur Ambang Batas</div>
+        <div class="subtitle">Pengaturan tiap sensor secara terpisah.</div>
+      </div>
+
+      <div class="profile">
+        <i class="fa-solid fa-user"></i>
+        <span id="profileUsername"></span>
+      </div>
+
+    </div>
+
+    <!-- CARD -->
+    <div class="container">
+
+      <!-- SENSOR 1 -->
+      <div class="card">
+
+        <div class="section-title">Sensor 1</div>
+
+        <div class="input-group">
+          <label>Batas Kering (%)</label>
+          <input type="number" class="input-box" id="kering1">
+        </div>
+
+        <div class="input-group">
+          <label>Batas Lembap (%)</label>
+          <input type="number" class="input-box" id="lembap1">
+        </div>
+
+      </div>
+
+      <!-- SENSOR 2 -->
+      <div class="card">
+
+        <div class="section-title">Sensor 2</div>
+
+        <div class="input-group">
+          <label>Batas Kering (%)</label>
+          <input type="number" class="input-box" id="kering2">
+        </div>
+
+        <div class="input-group">
+          <label>Batas Lembap (%)</label>
+          <input type="number" class="input-box" id="lembap2">
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- BUTTON CENTER -->
+    <div class="btn-container">
+      <button class="save-btn" onclick="simpanData()">
+        Simpan Pengaturan
+      </button>
+    </div>
+
+  </div>
+
+  <!-- SCRIPT -->
+  <script type="module">
+
+    import { db, ref, onValue, set, get } from "./firebase.js";
+
+    // ================= USER PROFILE (localStorage) =================
+    let loginUser = localStorage.getItem("loginUser");
+    document.getElementById("profileUsername").innerText = loginUser;
+
+    // ================= BACA BATAS DARI FIREBASE =================
+
+    // Sensor 1
+    const sensor1Ref = ref(db, "/sensor1");
+    get(sensor1Ref).then((snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        document.getElementById("kering1").value = data.bataskering || "";
+        document.getElementById("lembap1").value = data.batslembab || "";
+      }
+    });
+
+    // Sensor 2
+    const sensor2Ref = ref(db, "/sensor2");
+    get(sensor2Ref).then((snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        document.getElementById("kering2").value = data.bataskering || "";
+        document.getElementById("lembap2").value = data.batslembab || "";
+      }
+    });
+
+    // ================= SIMPAN BATAS KE FIREBASE =================
+    window.simpanData = function() {
+
+      const kering1 = Number(document.getElementById("kering1").value);
+      const lembap1 = Number(document.getElementById("lembap1").value);
+      const kering2 = Number(document.getElementById("kering2").value);
+      const lembap2 = Number(document.getElementById("lembap2").value);
+
+      if (!kering1 && !lembap1 && !kering2 && !lembap2) {
+        alert("Harap isi minimal satu batas!");
+        return;
+      }
+
+      // Tulis ke /sensor1/bataskering dan /sensor1/batslembab
+      const updates = [];
+
+      updates.push(set(ref(db, "/sensor1/bataskering"), kering1));
+      updates.push(set(ref(db, "/sensor1/batslembab"), lembap1));
+      updates.push(set(ref(db, "/sensor2/bataskering"), kering2));
+      updates.push(set(ref(db, "/sensor2/batslembab"), lembap2));
+
+      Promise.all(updates)
+        .then(() => {
+          alert("Pengaturan berhasil disimpan ke Firebase!");
+        })
+        .catch((error) => {
+          alert("Gagal menyimpan: " + error.message);
+        });
+    }
+
+  </script>
+
+</body>
+</html>

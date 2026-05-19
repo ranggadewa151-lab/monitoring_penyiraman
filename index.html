@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Monitoring Kelembapan Tanah Dan Penyiraman Otomatis</title>
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:'Poppins', sans-serif;
+    }
+
+    body{
+      min-height:100vh;
+      background:linear-gradient(to right,#f4f4f4,#dff5e8);
+      padding:30px;
+    }
+
+    .login-container{
+      width:90%;
+      max-width:900px;
+      background:white;
+      padding:50px 40px;
+      border-radius:20px;
+      box-shadow:0 10px 30px rgba(0,0,0,0.1);
+      margin:auto;
+    }
+
+    .logo{
+      text-align:center;
+      font-size:38px;
+      font-weight:700;
+      color:#05a660;
+      margin-bottom:5px;
+      line-height:1.3;
+    }
+
+    .subtitle{
+      text-align:center;
+      letter-spacing:5px;
+      color:#5b6575;
+      font-size:18px;
+      font-weight:600;
+      margin-bottom:50px;
+    }
+
+    .label{
+      width:58%;
+      margin:0 auto 10px auto;
+      font-size:14px;
+      font-weight:600;
+      color:#5b6575;
+      display:block;
+      letter-spacing:2px;
+    }
+
+    .input-box{
+      width:60%;
+      height:60px;
+      border:2px solid #e5e5e5;
+      border-radius:15px;
+      display:flex;
+      align-items:center;
+      padding:0 20px;
+      margin:0 auto 25px auto;
+      transition:0.3s;
+    }
+
+    .input-box:focus-within{
+      border-color:#11b56b;
+      box-shadow:0 0 10px rgba(17,181,107,0.2);
+    }
+
+    .input-box i{
+      font-size:20px;
+      color:#11b56b;
+      margin-right:15px;
+    }
+
+    .input-box input{
+      width:100%;
+      border:none;
+      outline:none;
+      font-size:16px;
+      background:transparent;
+    }
+
+    .login-btn{
+      width:50%;
+      height:55px;
+      border:none;
+      border-radius:15px;
+      background:#09a35b;
+      color:white;
+      font-size:22px;
+      font-weight:600;
+      cursor:pointer;
+      transition:0.3s;
+      margin:10px auto 0 auto;
+      display:block;
+    }
+
+    .login-btn:hover{
+      background:#07884c;
+      transform:scale(1.02);
+    }
+
+    .register{
+      text-align:center;
+      margin-top:25px;
+      color:#666;
+      font-size:15px;
+    }
+
+    .register a{
+      text-decoration:none;
+      color:#059657;
+      font-weight:600;
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <div class="login-container">
+
+    <div class="logo">
+      Monitoring Kelembapan Tanah Dan Penyiraman Otomatis
+    </div>
+
+    <div class="subtitle">
+      SELAMAT DATANG
+    </div>
+
+    <label class="label">USERNAME</label>
+
+    <div class="input-box">
+      <i class="fa-regular fa-user"></i>
+      <input type="text" id="loginUsername" placeholder="Masukkan Username">
+    </div>
+
+    <label class="label">PASSWORD</label>
+
+    <div class="input-box">
+      <i class="fa-solid fa-lock"></i>
+      <input type="password" id="loginPassword" placeholder="Masukkan Password">
+    </div>
+
+    <button class="login-btn" onclick="login()">
+      Masuk
+    </button>
+
+    <div class="register">
+      Belum punya akun?
+      <a href="register.html">Daftar di sini</a>
+    </div>
+
+  </div>
+
+<script>
+
+function login(){
+
+  let username = document.getElementById("loginUsername").value;
+  let password = document.getElementById("loginPassword").value;
+
+  let savedUsername = localStorage.getItem("username");
+  let savedPassword = localStorage.getItem("password");
+
+  // DEBUG (hapus kalau sudah normal)
+  console.log("savedUsername:", savedUsername);
+  console.log("savedPassword:", savedPassword);
+
+  if(!savedUsername || !savedPassword){
+    alert("Akun belum terdaftar!");
+    return;
+  }
+
+  if(username === savedUsername && password === savedPassword){
+
+    localStorage.setItem("loginUser", username);
+
+    alert("Login berhasil!");
+
+    window.location.href = "dashboard.html";
+
+  }else{
+
+    alert("Username atau Password salah!");
+
+  }
+
+}
+
+</script>
+
+</body>
+</html>
