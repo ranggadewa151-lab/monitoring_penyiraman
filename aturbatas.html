@@ -181,6 +181,72 @@
 
     .save-btn:hover{
       background:#07884c;
+    /* ================= RESPONSIVE ================= */
+
+    @media(max-width:900px){
+
+      body{
+        flex-direction:column;
+      }
+
+      .sidebar{
+        width:100%;
+        height:auto;
+        padding:20px;
+      }
+
+      .sidebar > div {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .logo{
+        font-size:18px;
+        margin-bottom:20px;
+        text-align: center;
+      }
+
+      .menu{
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+        width: 100%;
+      }
+
+      .menu a{
+        margin-bottom: 0;
+        padding: 10px 15px;
+        font-size: 14px;
+      }
+
+      .main{
+        padding:20px;
+      }
+
+      .top{
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+      }
+
+      .title{
+        font-size:28px;
+      }
+
+      .container{
+        flex-direction: column;
+      }
+
+      .card{
+        min-width: 100%;
+        padding: 20px;
+      }
+
+      .save-btn{
+        width: 100%;
+      }
     }
 
   </style>
