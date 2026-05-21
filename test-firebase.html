@@ -80,10 +80,9 @@
       }
     }
 
-    // ===== POMPA =====
     window.isiDataPompa = async function() {
       try {
-        await set(ref(db, "/pompa"), {
+        await set(ref(db, "/pompa1"), {
           status: "MATI",
           terakhir: "22:26 WIB"
         });
@@ -121,21 +120,24 @@
           sensor1: 35,
           sensor2: 40,
           status: "KERING",
-          pompa: "MENYALA"
+          pompa1: "MENYALA",
+          pompa2: "MATI"
         });
         await push(riwayatRef, {
           waktu: "18 Mei 2026 - 09:15",
           sensor1: 72,
           sensor2: 68,
           status: "LEMBAP",
-          pompa: "MATI"
+          pompa1: "MATI",
+          pompa2: "MENYALA"
         });
         await push(riwayatRef, {
           waktu: "18 Mei 2026 - 10:40",
           sensor1: 90,
           sensor2: 88,
           status: "BASAH",
-          pompa: "MATI"
+          pompa1: "MATI",
+          pompa2: "MATI"
         });
         log("✅ 3 entri riwayat berhasil ditulis");
       } catch (e) {

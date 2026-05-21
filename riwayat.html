@@ -5,10 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Riwayat Monitoring</title>
 
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
   <style>
+
     *{
       margin:0;
       padding:0;
@@ -158,7 +161,9 @@
     }
     
     /* ================= RESPONSIVE ================= */
+
     @media(max-width:900px){
+
       body{
         flex-direction:column;
       }
@@ -219,6 +224,7 @@
         font-size: 14px;
       }
     }
+
   </style>
 </head>
 
@@ -226,71 +232,94 @@
 
   <!-- SIDEBAR -->
   <div class="sidebar">
+
     <div>
+
       <div class="logo">
         Monitoring Kelembapan Tanah Dan Penyiraman Otomatis
       </div>
+
       <div class="menu">
+
         <a href="dashboard.html">
           <i class="fa-solid fa-house"></i> Dashboard
         </a>
+
         <a href="#" class="active">
           <i class="fa-solid fa-clock-rotate-left"></i> Riwayat
         </a>
+
         <a href="aturbatas.html">
           <i class="fa-solid fa-sliders"></i> Atur Batas
         </a>
+
         <a href="profil.html">
           <i class="fa-solid fa-user"></i> Profil
         </a>
+
       </div>
+
     </div>
+
     <div class="menu">
+
       <a href="index.html" class="logout">
         <i class="fa-solid fa-right-from-bracket"></i> Keluar
       </a>
+
     </div>
+
   </div>
 
   <!-- MAIN -->
   <div class="main">
+
     <div class="top">
+
       <div>
         <div class="title">Riwayat Monitoring</div>
         <div class="subtitle">Data hasil monitoring kelembapan tanah.</div>
       </div>
+
       <div class="profile">
         <i class="fa-solid fa-user"></i>
         <span id="profileUsername"></span>
       </div>
+
     </div>
 
     <!-- TABLE -->
     <div class="table-container">
+
       <table>
+
         <thead>
           <tr>
             <th>No</th>
             <th>Waktu</th>
             <th>Sensor 1</th>
             <th>Sensor 2</th>
-            <th>Status</th>
             <th>Pompa 1</th>
             <th>Pompa 2</th>
           </tr>
         </thead>
+
         <tbody id="riwayatBody">
           <tr>
-            <td colspan="7" style="text-align:center;color:#9ca3af;padding:30px;">
+            <td colspan="6" style="text-align:center;color:#9ca3af;padding:30px;">
               Memuat data dari Firebase...
             </td>
           </tr>
         </tbody>
+
       </table>
+
     </div>
+
   </div>
 
   <script type="module">
+
     import { db, ref, onValue, query, orderByChild, limitToLast } from "./firebase.js";
 
     // ================= USER PROFILE (localStorage) =================
@@ -306,7 +335,7 @@
       if (!data) {
         tbody.innerHTML = `
           <tr>
-            <td colspan="7" style="text-align:center;color:#9ca3af;padding:30px;">
+            <td colspan="6" style="text-align:center;color:#9ca3af;padding:30px;">
               Belum ada data riwayat.
             </td>
           </tr>`;
@@ -325,26 +354,23 @@
         return 0;
       });
 
-      // Generate tabel dengan kolom Pompa 1 dan Pompa 2
+      // Generate tabel
       let html = "";
       entries.forEach((item, index) => {
-        const statusClass = (item.status || "").toLowerCase();
         html += `
           <tr>
             <td>${index + 1}</td>
             <td>${item.waktu || "-"}</td>
             <td>${item.sensor1 || 0}%</td>
             <td>${item.sensor2 || 0}%</td>
-            <td>
-              <span class="status ${statusClass}">${item.status || "-"}</span>
-            </td>
-            <td>${item.pompa || "-"}</td>
+            <td>${item.pompa1 || item.pompa || "-"}</td>
             <td>${item.pompa2 || "-"}</td>
           </tr>`;
       });
 
       tbody.innerHTML = html;
     });
+
   </script>
 
 </body>
