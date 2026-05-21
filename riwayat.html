@@ -320,19 +320,25 @@
 
   <script type="module">
 
-    import { db, ref, onValue, query, orderByChild, limitToLast } from "./firebase.js";
+    import { db, ref, onValue, query, orderByChild, limitToLast, orderByKey } from "./firebase.js?v=2";
 
     // ================= USER PROFILE (localStorage) =================
     let loginUser = localStorage.getItem("loginUser");
     document.getElementById("profileUsername").innerText = loginUser;
 
     // ================= BACA RIWAYAT DARI FIREBASE =================
+    // Hanya ambil 50 data terakhir agar loadingnya cepat
     const riwayatRef = ref(db, "/riwayat");
-    onValue(riwayatRef, (snapshot) => {
+    const riwayatQuery = query(riwayatRef, orderByKey(), limitToLast(50));
+    
+    onValue(riwayatQuery, (snapshot) => {
       const data = snapshot.val();
+      console.log("📥 [Riwayat] Data mentah dari Firebase:", data);
+      
       const tbody = document.getElementById("riwayatBody");
 
       if (!data) {
+        console.log("⚠️ [Riwayat] Tidak ada data ditemukan.");
         tbody.innerHTML = `
           <tr>
             <td colspan="6" style="text-align:center;color:#9ca3af;padding:30px;">
@@ -347,10 +353,11 @@
         id: key,
         ...data[key]
       }));
+      console.log("🔄 [Riwayat] Data setelah di-parsing ke array:", entries);
 
       // Urutkan berdasarkan waktu (terbaru di atas)
       entries.sort((a, b) => {
-        if (a.waktu && b.waktu) return b.waktu.localeCompare(a.waktu);
+        if (a.waktu && b.waktu) return String(b.waktu).localeCompare(String(a.waktu));
         return 0;
       });
 

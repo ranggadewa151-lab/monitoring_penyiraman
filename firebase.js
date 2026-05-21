@@ -1,7 +1,7 @@
 // ================= FIREBASE CONFIG =================
 // Import Firebase modules
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
-import { getDatabase, ref, onValue, set, get, push, orderByChild, limitToLast, query }
+import { getDatabase, ref, onValue, set, get, push, orderByChild, limitToLast, query, orderByKey }
   from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
 
 // Firebase configuration
@@ -21,4 +21,4 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
 // Export untuk dipakai di halaman lain
-export { db, ref, onValue, set, get, push, orderByChild, limitToLast, query };
+export { db, ref, onValue, set, get, push, orderByChild, limitToLast, query, orderByKey };
