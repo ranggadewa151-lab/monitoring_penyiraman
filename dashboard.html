@@ -593,7 +593,7 @@
     }
 
     // ================= POMPA 1: Realtime dari Firebase =================
-    const pompaRef = ref(db, "/pompa");
+    const pompaRef = ref(db, "/pompa1");
     onValue(pompaRef, (snapshot) => {
       const data = snapshot.val();
       console.log("📡 Pompa 1 data:", data);
