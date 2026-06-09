@@ -107,6 +107,52 @@
       border-radius:12px;
     }
 
+    /* ===== HAPUS SEMUA BUTTON ===== */
+    .table-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:20px;
+    }
+
+    .table-title{
+      font-size:18px;
+      font-weight:600;
+      color:#374151;
+    }
+
+    .btn-hapus-semua{
+      background:linear-gradient(135deg, #ef4444, #dc2626);
+      color:white;
+      border:none;
+      padding:11px 22px;
+      border-radius:12px;
+      font-size:14px;
+      font-weight:600;
+      font-family:'Poppins', sans-serif;
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      gap:8px;
+      box-shadow:0 4px 12px rgba(239,68,68,0.3);
+      transition:all 0.25s ease;
+    }
+
+    .btn-hapus-semua:hover{
+      transform:translateY(-2px);
+      box-shadow:0 6px 18px rgba(239,68,68,0.4);
+    }
+
+    .btn-hapus-semua:active{
+      transform:translateY(0);
+    }
+
+    .btn-hapus-semua:disabled{
+      opacity:0.5;
+      cursor:not-allowed;
+      transform:none;
+    }
+
     .table-container{
       background:white;
       border-radius:30px;
@@ -127,13 +173,16 @@
       font-size:16px;
     }
 
+    th:first-child{ border-radius:10px 0 0 10px; }
+    th:last-child{ border-radius:0 10px 10px 0; }
+
     td{
       padding:18px;
       border-bottom:1px solid #e5e7eb;
       color:#374151;
     }
 
-    tr:hover{
+    tr:hover td{
       background:#f9fafb;
     }
 
@@ -159,7 +208,155 @@
       background:#dbeafe;
       color:#2563eb;
     }
-    
+
+    /* ===== TOMBOL HAPUS PER BARIS ===== */
+    .btn-hapus-row{
+      background:none;
+      border:none;
+      cursor:pointer;
+      color:#d1d5db;
+      font-size:16px;
+      padding:6px 10px;
+      border-radius:8px;
+      transition:all 0.2s ease;
+    }
+
+    .btn-hapus-row:hover{
+      background:#fee2e2;
+      color:#ef4444;
+      transform:scale(1.15);
+    }
+
+    /* ===== MODAL KONFIRMASI ===== */
+    .modal-overlay{
+      display:none;
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,0.45);
+      backdrop-filter:blur(4px);
+      z-index:999;
+      justify-content:center;
+      align-items:center;
+      animation:fadeIn 0.2s ease;
+    }
+
+    .modal-overlay.show{
+      display:flex;
+    }
+
+    @keyframes fadeIn{
+      from{ opacity:0; }
+      to{ opacity:1; }
+    }
+
+    .modal-box{
+      background:white;
+      border-radius:24px;
+      padding:36px 40px;
+      max-width:400px;
+      width:90%;
+      text-align:center;
+      box-shadow:0 20px 60px rgba(0,0,0,0.15);
+      animation:slideUp 0.25s ease;
+    }
+
+    @keyframes slideUp{
+      from{ transform:translateY(30px); opacity:0; }
+      to{ transform:translateY(0); opacity:1; }
+    }
+
+    .modal-icon{
+      font-size:48px;
+      margin-bottom:16px;
+    }
+
+    .modal-title{
+      font-size:20px;
+      font-weight:700;
+      color:#111827;
+      margin-bottom:10px;
+    }
+
+    .modal-desc{
+      font-size:14px;
+      color:#6b7280;
+      margin-bottom:28px;
+      line-height:1.6;
+    }
+
+    .modal-actions{
+      display:flex;
+      gap:12px;
+      justify-content:center;
+    }
+
+    .btn-batal{
+      flex:1;
+      padding:12px 20px;
+      border-radius:12px;
+      border:2px solid #e5e7eb;
+      background:white;
+      color:#374151;
+      font-size:14px;
+      font-weight:600;
+      font-family:'Poppins', sans-serif;
+      cursor:pointer;
+      transition:all 0.2s ease;
+    }
+
+    .btn-batal:hover{
+      background:#f9fafb;
+      border-color:#d1d5db;
+    }
+
+    .btn-konfirm-hapus{
+      flex:1;
+      padding:12px 20px;
+      border-radius:12px;
+      border:none;
+      background:linear-gradient(135deg, #ef4444, #dc2626);
+      color:white;
+      font-size:14px;
+      font-weight:600;
+      font-family:'Poppins', sans-serif;
+      cursor:pointer;
+      box-shadow:0 4px 12px rgba(239,68,68,0.3);
+      transition:all 0.2s ease;
+    }
+
+    .btn-konfirm-hapus:hover{
+      transform:translateY(-1px);
+      box-shadow:0 6px 16px rgba(239,68,68,0.4);
+    }
+
+    /* ===== TOAST NOTIFIKASI ===== */
+    .toast{
+      position:fixed;
+      bottom:28px;
+      right:28px;
+      padding:14px 22px;
+      border-radius:14px;
+      font-size:14px;
+      font-weight:600;
+      color:white;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      box-shadow:0 8px 24px rgba(0,0,0,0.15);
+      z-index:9999;
+      transform:translateY(80px);
+      opacity:0;
+      transition:all 0.35s cubic-bezier(0.34,1.56,0.64,1);
+    }
+
+    .toast.show{
+      transform:translateY(0);
+      opacity:1;
+    }
+
+    .toast.sukses{ background:linear-gradient(135deg,#09a35b,#059669); }
+    .toast.error{ background:linear-gradient(135deg,#ef4444,#dc2626); }
+
     /* ================= RESPONSIVE ================= */
 
     @media(max-width:900px){
@@ -291,6 +488,17 @@
     <!-- TABLE -->
     <div class="table-container">
 
+      <div class="table-header">
+        <div class="table-title">
+          <i class="fa-solid fa-table-list" style="color:#09a35b;margin-right:8px;"></i>
+          Data Riwayat
+        </div>
+        <button class="btn-hapus-semua" id="btnHapusSemua" onclick="konfirmasiHapusSemua()">
+          <i class="fa-solid fa-trash-can"></i>
+          Hapus Semua
+        </button>
+      </div>
+
       <table>
 
         <thead>
@@ -301,12 +509,13 @@
             <th>Sensor 2</th>
             <th>Pompa 1</th>
             <th>Pompa 2</th>
+            <th style="text-align:center;">Hapus</th>
           </tr>
         </thead>
 
         <tbody id="riwayatBody">
           <tr>
-            <td colspan="6" style="text-align:center;color:#9ca3af;padding:30px;">
+            <td colspan="7" style="text-align:center;color:#9ca3af;padding:30px;">
               Memuat data dari Firebase...
             </td>
           </tr>
@@ -318,64 +527,171 @@
 
   </div>
 
+  <!-- MODAL KONFIRMASI HAPUS -->
+  <div class="modal-overlay" id="modalHapus">
+    <div class="modal-box">
+      <div class="modal-icon">🗑️</div>
+      <div class="modal-title" id="modalTitle">Hapus Riwayat?</div>
+      <div class="modal-desc" id="modalDesc">
+        Data yang dihapus tidak dapat dikembalikan. Yakin ingin menghapus?
+      </div>
+      <div class="modal-actions">
+        <button class="btn-batal" id="btnBatal" onclick="tutupModal()">
+          <i class="fa-solid fa-xmark"></i> Batal
+        </button>
+        <button class="btn-konfirm-hapus" id="btnKonfirmHapus" onclick="eksekusiHapus()">
+          <i class="fa-solid fa-trash-can"></i> Hapus
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFIKASI -->
+  <div class="toast" id="toast">
+    <i class="fa-solid fa-check-circle" id="toastIcon"></i>
+    <span id="toastMsg"></span>
+  </div>
+
   <script type="module">
 
-    import { db, ref, onValue, query, orderByChild, limitToLast, orderByKey } from "./firebase.js?v=2";
+    import { db, ref, onValue, query, orderByKey, limitToLast, remove } from "./firebase.js?v=3";
 
     // ================= USER PROFILE (localStorage) =================
     let loginUser = localStorage.getItem("loginUser");
     document.getElementById("profileUsername").innerText = loginUser;
 
+    // ================= STATE =================
+    let pendingHapusId   = null;  // ID satu baris yang akan dihapus
+    let pendingHapusSemua = false; // flag hapus semua
+
     // ================= BACA RIWAYAT DARI FIREBASE =================
-    // Hanya ambil 50 data terakhir agar loadingnya cepat
-    const riwayatRef = ref(db, "/riwayat");
+    const riwayatRef   = ref(db, "/riwayat");
     const riwayatQuery = query(riwayatRef, orderByKey(), limitToLast(50));
-    
+
     onValue(riwayatQuery, (snapshot) => {
       const data = snapshot.val();
-      console.log("📥 [Riwayat] Data mentah dari Firebase:", data);
-      
       const tbody = document.getElementById("riwayatBody");
+      const btnSemua = document.getElementById("btnHapusSemua");
 
       if (!data) {
-        console.log("⚠️ [Riwayat] Tidak ada data ditemukan.");
         tbody.innerHTML = `
           <tr>
-            <td colspan="6" style="text-align:center;color:#9ca3af;padding:30px;">
+            <td colspan="7" style="text-align:center;color:#9ca3af;padding:30px;">
               Belum ada data riwayat.
             </td>
           </tr>`;
+        btnSemua.disabled = true;
         return;
       }
+
+      btnSemua.disabled = false;
 
       // Konversi object ke array
       const entries = Object.keys(data).map(key => ({
         id: key,
         ...data[key]
       }));
-      console.log("🔄 [Riwayat] Data setelah di-parsing ke array:", entries);
 
-      // Urutkan berdasarkan waktu (terbaru di atas)
+      // Urutkan terbaru di atas
       entries.sort((a, b) => {
         if (a.waktu && b.waktu) return String(b.waktu).localeCompare(String(a.waktu));
         return 0;
       });
 
-      // Generate tabel
+      // Generate tabel dengan tombol hapus per baris
       let html = "";
       entries.forEach((item, index) => {
         html += `
-          <tr>
+          <tr id="row-${item.id}">
             <td>${index + 1}</td>
             <td>${item.waktu || "-"}</td>
             <td>${item.sensor1 || 0}%</td>
             <td>${item.sensor2 || 0}%</td>
             <td>${item.pompa1 || item.pompa || "-"}</td>
             <td>${item.pompa2 || "-"}</td>
+            <td style="text-align:center;">
+              <button class="btn-hapus-row" title="Hapus baris ini"
+                onclick="window.konfirmasiHapusSatu('${item.id}', '${item.waktu || '-'}')">
+                <i class="fa-solid fa-trash-can"></i>
+              </button>
+            </td>
           </tr>`;
       });
 
       tbody.innerHTML = html;
+    });
+
+    // ================= MODAL HELPERS =================
+    function bukaModal(title, desc){
+      document.getElementById("modalTitle").innerText = title;
+      document.getElementById("modalDesc").innerText  = desc;
+      document.getElementById("modalHapus").classList.add("show");
+    }
+
+    window.tutupModal = function(){
+      document.getElementById("modalHapus").classList.remove("show");
+      pendingHapusId    = null;
+      pendingHapusSemua = false;
+    };
+
+    // ================= KONFIRMASI HAPUS SATU BARIS =================
+    window.konfirmasiHapusSatu = function(id, waktu){
+      pendingHapusId    = id;
+      pendingHapusSemua = false;
+      bukaModal(
+        "Hapus Data Ini?",
+        `Data pada waktu "${waktu}" akan dihapus secara permanen dari Firebase. Lanjutkan?`
+      );
+    };
+
+    // ================= KONFIRMASI HAPUS SEMUA =================
+    window.konfirmasiHapusSemua = function(){
+      pendingHapusId    = null;
+      pendingHapusSemua = true;
+      bukaModal(
+        "Hapus Semua Riwayat?",
+        "Seluruh data riwayat monitoring akan dihapus secara permanen dari Firebase. Tindakan ini tidak dapat dibatalkan!"
+      );
+    };
+
+    // ================= EKSEKUSI HAPUS =================
+    window.eksekusiHapus = async function(){
+      const btnKonfirm = document.getElementById("btnKonfirmHapus");
+      const btnBatal   = document.getElementById("btnBatal");
+      btnKonfirm.disabled = true;
+      btnBatal.disabled   = true;
+      btnKonfirm.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Menghapus...`;
+
+      try {
+        if (pendingHapusSemua) {
+          // Hapus seluruh node /riwayat
+          await remove(ref(db, "/riwayat"));
+          tutupModal();
+          tampilToast("sukses", "✅ Semua riwayat berhasil dihapus!");
+        } else if (pendingHapusId) {
+          // Hapus satu baris berdasarkan ID
+          await remove(ref(db, `/riwayat/${pendingHapusId}`));
+          tutupModal();
+          tampilToast("sukses", "✅ Data berhasil dihapus!");
+        }
+      } catch(err) {
+        console.error("Gagal menghapus:", err);
+        tutupModal();
+        tampilToast("error", "❌ Gagal menghapus. Periksa koneksi/izin Firebase.");
+      }
+    };
+
+    // ================= TOAST =================
+    function tampilToast(tipe, pesan){
+      const toast = document.getElementById("toast");
+      document.getElementById("toastMsg").innerText = pesan;
+      toast.className = `toast ${tipe} show`;
+      setTimeout(() => { toast.classList.remove("show"); }, 3000);
+    }
+
+    // Tutup modal jika klik di luar box
+    document.getElementById("modalHapus").addEventListener("click", function(e){
+      if(e.target === this) tutupModal();
     });
 
   </script>
