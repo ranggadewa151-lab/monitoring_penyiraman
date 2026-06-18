@@ -130,6 +130,37 @@
       font-weight:600;
     }
 
+    /* ================= ALERT BOX ================= */
+
+    .alert-box{
+      display:none;
+      width:60%;
+      margin:0 auto 20px auto;
+      padding:14px 20px;
+      border-radius:12px;
+      font-size:14px;
+      font-weight:500;
+      text-align:center;
+      animation:fadeIn 0.3s ease;
+    }
+
+    .alert-box.error{
+      background:#fdecea;
+      color:#c0392b;
+      border:1.5px solid #e74c3c;
+    }
+
+    .alert-box.success{
+      background:#e8f8f1;
+      color:#1a7a4a;
+      border:1.5px solid #2ecc71;
+    }
+
+    @keyframes fadeIn{
+      from{ opacity:0; transform:translateY(-8px); }
+      to  { opacity:1; transform:translateY(0); }
+    }
+
     /* ================= RESPONSIVE ================= */
 
     @media(max-width:600px){
@@ -203,7 +234,10 @@
       <input type="password" id="loginPassword" placeholder="Masukkan Password">
     </div>
 
-    <button class="login-btn" onclick="login()">
+    <!-- Alert Box -->
+    <div id="alertBox" class="alert-box"></div>
+
+    <button id="btnMasuk" class="login-btn" onclick="login()">
       Masuk
     </button>
 
@@ -214,40 +248,70 @@
 
   </div>
 
-<script>
+<script type="module">
 
-function login(){
+  import { db, ref, get } from "./firebase.js";
 
-  let username = document.getElementById("loginUsername").value;
-  let password = document.getElementById("loginPassword").value;
+  window.login = async function(){
 
-  let savedUsername = localStorage.getItem("username");
-  let savedPassword = localStorage.getItem("password");
+    const username  = document.getElementById("loginUsername").value.trim();
+    const password  = document.getElementById("loginPassword").value;
+    const btnMasuk  = document.getElementById("btnMasuk");
 
-  // DEBUG (hapus kalau sudah normal)
-  console.log("savedUsername:", savedUsername);
-  console.log("savedPassword:", savedPassword);
+    // ── Validasi kosong ─────────────────────────────────────────
+    if(username === "" || password === ""){
+      showAlert("Username dan Password harus diisi!", "error");
+      return;
+    }
 
-  if(!savedUsername || !savedPassword){
-    alert("Akun belum terdaftar!");
-    return;
+    // ── Loading state ───────────────────────────────────────────
+    btnMasuk.disabled    = true;
+    btnMasuk.textContent = "Memeriksa...";
+
+    try {
+      // Ambil data user dari Firebase
+      const userRef  = ref(db, "users/" + username);
+      const snapshot = await get(userRef);
+
+      if(!snapshot.exists()){
+        showAlert("Akun tidak ditemukan! Silakan Register terlebih dahulu.", "error");
+        btnMasuk.disabled    = false;
+        btnMasuk.textContent = "Masuk";
+        return;
+      }
+
+      const userData = snapshot.val();
+
+      if(userData.password !== password){
+        showAlert("Password salah!", "error");
+        btnMasuk.disabled    = false;
+        btnMasuk.textContent = "Masuk";
+        return;
+      }
+
+      // Simpan sesi login ke localStorage
+      localStorage.setItem("loginUser", username);
+
+      showAlert("Login berhasil! Mengarahkan ke dashboard...", "success");
+
+      setTimeout(() => { window.location.href = "dashboard.html"; }, 1500);
+
+    } catch(error){
+      console.error("Login error:", error);
+      showAlert("Terjadi kesalahan: " + error.message, "error");
+      btnMasuk.disabled    = false;
+      btnMasuk.textContent = "Masuk";
+    }
+  };
+
+  // ── Helper: tampilkan notifikasi ────────────────────────────
+  function showAlert(msg, type){
+    const el = document.getElementById("alertBox");
+    el.textContent  = msg;
+    el.className    = "alert-box " + type;
+    el.style.display = "block";
+    if(type !== "success") setTimeout(() => { el.style.display = "none"; }, 3500);
   }
-
-  if(username === savedUsername && password === savedPassword){
-
-    localStorage.setItem("loginUser", username);
-
-    alert("Login berhasil!");
-
-    window.location.href = "dashboard.html";
-
-  }else{
-
-    alert("Username atau Password salah!");
-
-  }
-
-}
 
 </script>
 

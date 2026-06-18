@@ -3,6 +3,8 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
 import { getDatabase, ref, onValue, set, get, push, orderByChild, limitToLast, query, orderByKey, remove }
   from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut }
+  from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
 
 // Firebase configuration
 const firebaseConfig = {
@@ -19,7 +21,8 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
+const auth = getAuth(app);
 
 // Export untuk dipakai di halaman lain
 export { db, ref, onValue, set, get, push, orderByChild, limitToLast, query, orderByKey, remove };
-
+export { auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut };

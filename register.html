@@ -128,6 +128,37 @@
       font-weight:600;
     }
 
+    /* ================= ALERT BOX ================= */
+
+    .alert-box{
+      display:none;
+      width:100%;
+      margin:0 auto 20px auto;
+      padding:14px 20px;
+      border-radius:12px;
+      font-size:14px;
+      font-weight:500;
+      text-align:center;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .alert-box.error{
+      background:#fdecea;
+      color:#c0392b;
+      border:1.5px solid #e74c3c;
+    }
+
+    .alert-box.success{
+      background:#e8f8f1;
+      color:#1a7a4a;
+      border:1.5px solid #2ecc71;
+    }
+
+    @keyframes fadeIn{
+      from{ opacity:0; transform:translateY(-8px); }
+      to  { opacity:1; transform:translateY(0); }
+    }
+
     /* ================= RESPONSIVE ================= */
 
     @media(max-width:600px){
@@ -178,32 +209,81 @@
 
   </style>
 </head>
-<script>
+<script type="module">
 
-function register(){
+  import { db, ref, set, get } from "./firebase.js";
 
-  let username = document.getElementById("username").value;
-  let password = document.getElementById("password").value;
-  let confirmPassword = document.getElementById("confirmPassword").value;
+  window.register = async function(){
 
-  if(username == "" || password == "" || confirmPassword == ""){
-    alert("Semua data harus diisi!");
-    return;
+    const username      = document.getElementById("username").value.trim();
+    const password      = document.getElementById("password").value;
+    const confirmPassword = document.getElementById("confirmPassword").value;
+    const btnDaftar     = document.getElementById("btnDaftar");
+
+    // ── Validasi input ──────────────────────────────────────────
+    if(username === "" || password === "" || confirmPassword === ""){
+      showAlert("Semua data harus diisi!", "error");
+      return;
+    }
+
+    if(username.length < 3){
+      showAlert("Username minimal 3 karakter!", "error");
+      return;
+    }
+
+    if(password.length < 6){
+      showAlert("Password minimal 6 karakter!", "error");
+      return;
+    }
+
+    if(password !== confirmPassword){
+      showAlert("Password tidak sama!", "error");
+      return;
+    }
+
+    // ── Loading state ───────────────────────────────────────────
+    btnDaftar.disabled = true;
+    btnDaftar.textContent = "Mendaftarkan...";
+
+    try {
+      // Cek apakah username sudah ada di Firebase
+      const userRef  = ref(db, "users/" + username);
+      const snapshot = await get(userRef);
+
+      if(snapshot.exists()){
+        showAlert("Username sudah digunakan!", "error");
+        btnDaftar.disabled = false;
+        btnDaftar.textContent = "Daftar";
+        return;
+      }
+
+      // Simpan data user ke Firebase Realtime Database
+      await set(userRef, {
+        username : username,
+        password : password,          // ⚠ plain-text — cukup untuk proyek TA
+        createdAt: new Date().toISOString()
+      });
+
+      showAlert("Register berhasil! Mengarahkan ke halaman login...", "success");
+
+      setTimeout(() => { window.location.href = "index.html"; }, 1800);
+
+    } catch(error) {
+      console.error("Register error:", error);
+      showAlert("Terjadi kesalahan: " + error.message, "error");
+      btnDaftar.disabled = false;
+      btnDaftar.textContent = "Daftar";
+    }
+  };
+
+  // ── Helper: tampilkan notifikasi ────────────────────────────
+  function showAlert(msg, type){
+    const el = document.getElementById("alertBox");
+    el.textContent = msg;
+    el.className   = "alert-box " + type;
+    el.style.display = "block";
+    if(type !== "success") setTimeout(() => { el.style.display = "none"; }, 3500);
   }
-
-  if(password !== confirmPassword){
-    alert("Password tidak sama!");
-    return;
-  }
-
-  // simpan ke localStorage
-  localStorage.setItem("username", username);
-  localStorage.setItem("password", password);
-
-  alert("Register berhasil!");
-
-  window.location.href = "index.html";
-}
 
 </script>
 <body>
@@ -242,11 +322,14 @@ function register(){
   <input type="password" id="confirmPassword" placeholder="Masukkan Password Lagi">
 </div>
 
+    <!-- Alert Box -->
+    <div id="alertBox" class="alert-box"></div>
+
     <!-- Button -->
-    <button class="register-btn" onclick="register()">
+    <button id="btnDaftar" class="register-btn" onclick="register()">
       Daftar
     </button>
- <div class="login-link">
+    <div class="login-link">
       <a href="index.html">Kembali</a>
     </div>
   </div>
