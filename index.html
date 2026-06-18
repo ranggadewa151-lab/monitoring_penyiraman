@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Monitoring Kelembapan Tanah Dan Penyiraman Otomatis</title>
+  <title>Login - Monitoring Kelembapan Tanah Dan Penyiraman Otomatis</title>
 
   <!-- Font Awesome -->
   <link rel="stylesheet"
@@ -27,6 +27,7 @@
       justify-content:center;
       align-items:center;
       background:linear-gradient(to right,#f4f4f4,#dff5e8);
+      padding:20px;
     }
 
     .login-container{
@@ -97,39 +98,6 @@
       background:transparent;
     }
 
-    .login-btn{
-      width:50%;
-      height:55px;
-      border:none;
-      border-radius:15px;
-      background:#09a35b;
-      color:white;
-      font-size:22px;
-      font-weight:600;
-      cursor:pointer;
-      transition:0.3s;
-      margin:10px auto 0 auto;
-      display:block;
-    }
-
-    .login-btn:hover{
-      background:#07884c;
-      transform:scale(1.02);
-    }
-
-    .register{
-      text-align:center;
-      margin-top:25px;
-      color:#666;
-      font-size:15px;
-    }
-
-    .register a{
-      text-decoration:none;
-      color:#059657;
-      font-weight:600;
-    }
-
     /* ================= ALERT BOX ================= */
 
     .alert-box{
@@ -159,6 +127,45 @@
     @keyframes fadeIn{
       from{ opacity:0; transform:translateY(-8px); }
       to  { opacity:1; transform:translateY(0); }
+    }
+
+    .login-btn{
+      width:50%;
+      height:55px;
+      border:none;
+      border-radius:15px;
+      background:#09a35b;
+      color:white;
+      font-size:22px;
+      font-weight:600;
+      cursor:pointer;
+      transition:0.3s;
+      margin:10px auto 0 auto;
+      display:block;
+    }
+
+    .login-btn:hover{
+      background:#07884c;
+      transform:scale(1.02);
+    }
+
+    .login-btn:disabled{
+      background:#aaa;
+      cursor:not-allowed;
+      transform:none;
+    }
+
+    .register{
+      text-align:center;
+      margin-top:25px;
+      color:#666;
+      font-size:15px;
+    }
+
+    .register a{
+      text-decoration:none;
+      color:#059657;
+      font-weight:600;
     }
 
     /* ================= RESPONSIVE ================= */
@@ -197,6 +204,10 @@
         font-size:14px;
       }
 
+      .alert-box{
+        width:100%;
+      }
+
       .login-btn{
         width:100%;
         height:50px;
@@ -221,14 +232,12 @@
     </div>
 
     <label class="label">USERNAME</label>
-
     <div class="input-box">
       <i class="fa-regular fa-user"></i>
       <input type="text" id="loginUsername" placeholder="Masukkan Username">
     </div>
 
     <label class="label">PASSWORD</label>
-
     <div class="input-box">
       <i class="fa-solid fa-lock"></i>
       <input type="password" id="loginPassword" placeholder="Masukkan Password">
@@ -248,72 +257,79 @@
 
   </div>
 
-<script type="module">
+  <!-- ============ SCRIPT FIREBASE ============ -->
+  <script type="module">
 
-  import { db, ref, get } from "./firebase.js";
+    import { db, ref, get } from "./firebase.js";
 
-  window.login = async function(){
+    window.login = async function(){
 
-    const username  = document.getElementById("loginUsername").value.trim();
-    const password  = document.getElementById("loginPassword").value;
-    const btnMasuk  = document.getElementById("btnMasuk");
+      const username = document.getElementById("loginUsername").value.trim();
+      const password = document.getElementById("loginPassword").value;
+      const btnMasuk = document.getElementById("btnMasuk");
 
-    // ── Validasi kosong ─────────────────────────────────────────
-    if(username === "" || password === ""){
-      showAlert("Username dan Password harus diisi!", "error");
-      return;
-    }
-
-    // ── Loading state ───────────────────────────────────────────
-    btnMasuk.disabled    = true;
-    btnMasuk.textContent = "Memeriksa...";
-
-    try {
-      // Ambil data user dari Firebase
-      const userRef  = ref(db, "users/" + username);
-      const snapshot = await get(userRef);
-
-      if(!snapshot.exists()){
-        showAlert("Akun tidak ditemukan! Silakan Register terlebih dahulu.", "error");
-        btnMasuk.disabled    = false;
-        btnMasuk.textContent = "Masuk";
+      // ── Validasi kosong ─────────────────────────────────────────
+      if(username === "" || password === ""){
+        showAlert("Username dan Password harus diisi!", "error");
         return;
       }
 
-      const userData = snapshot.val();
+      // ── Loading state ───────────────────────────────────────────
+      btnMasuk.disabled    = true;
+      btnMasuk.textContent = "Memeriksa...";
 
-      if(userData.password !== password){
-        showAlert("Password salah!", "error");
+      try {
+        // Ambil data user dari Firebase
+        const userRef  = ref(db, "users/" + username);
+        const snapshot = await get(userRef);
+
+        if(!snapshot.exists()){
+          showAlert("Akun tidak ditemukan! Silakan Register terlebih dahulu.", "error");
+          btnMasuk.disabled    = false;
+          btnMasuk.textContent = "Masuk";
+          return;
+        }
+
+        const userData = snapshot.val();
+
+        if(userData.password !== password){
+          showAlert("Password salah!", "error");
+          btnMasuk.disabled    = false;
+          btnMasuk.textContent = "Masuk";
+          return;
+        }
+
+        // Simpan sesi login
+        localStorage.setItem("loginUser", username);
+
+        showAlert("✅ Login berhasil! Mengarahkan ke dashboard...", "success");
+
+        setTimeout(() => { window.location.href = "dashboard.html"; }, 1500);
+
+      } catch(err){
+        console.error("Login error:", err);
+        let msg = "Terjadi kesalahan, coba lagi.";
+        if(err.code === "PERMISSION_DENIED" || (err.message && err.message.includes("permission"))){
+          msg = "❌ Akses ditolak Firebase! Pastikan Rules database sudah diset ke true.";
+        } else if(err.message){
+          msg = "❌ Error: " + err.message;
+        }
+        showAlert(msg, "error");
         btnMasuk.disabled    = false;
         btnMasuk.textContent = "Masuk";
-        return;
       }
+    };
 
-      // Simpan sesi login ke localStorage
-      localStorage.setItem("loginUser", username);
-
-      showAlert("Login berhasil! Mengarahkan ke dashboard...", "success");
-
-      setTimeout(() => { window.location.href = "dashboard.html"; }, 1500);
-
-    } catch(error){
-      console.error("Login error:", error);
-      showAlert("Terjadi kesalahan: " + error.message, "error");
-      btnMasuk.disabled    = false;
-      btnMasuk.textContent = "Masuk";
+    // ── Helper: tampilkan notifikasi ────────────────────────────
+    function showAlert(msg, type){
+      const el = document.getElementById("alertBox");
+      el.textContent   = msg;
+      el.className     = "alert-box " + type;
+      el.style.display = "block";
+      if(type !== "success") setTimeout(() => { el.style.display = "none"; }, 4000);
     }
-  };
 
-  // ── Helper: tampilkan notifikasi ────────────────────────────
-  function showAlert(msg, type){
-    const el = document.getElementById("alertBox");
-    el.textContent  = msg;
-    el.className    = "alert-box " + type;
-    el.style.display = "block";
-    if(type !== "success") setTimeout(() => { el.style.display = "none"; }, 3500);
-  }
-
-</script>
+  </script>
 
 </body>
 </html>
