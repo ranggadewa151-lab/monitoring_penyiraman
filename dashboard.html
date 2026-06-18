@@ -3,519 +3,732 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard Utama</title>
+  <title>Dashboard Utama - EcoGarden</title>
 
   <!-- Font Awesome -->
-  <link rel="stylesheet"
-  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
   <!-- Google Font -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
   <style>
-
-    *{
-      margin:0;
-      padding:0;
-      box-sizing:border-box;
-      font-family:'Poppins', sans-serif;
+    :root {
+      --primary: #09a35b;
+      --primary-hover: #07884c;
+      --primary-light: #e8faf0;
+      --bg-gradient: linear-gradient(135deg, #f4f9f6 0%, #e9f5ee 100%);
+      --text-main: #1f2937;
+      --text-muted: #6b7280;
+      --card-shadow: 0 10px 25px rgba(0, 0, 0, 0.03);
+      --card-shadow-hover: 0 15px 35px rgba(9, 163, 91, 0.1);
+      --radius: 20px;
     }
 
-    body{
-      display:flex;
-      background:linear-gradient(to right,#f8f8f8,#dff5e8);
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      display: flex;
+      background: var(--bg-gradient);
+      min-height: 100vh;
+      color: var(--text-main);
     }
 
     /* ================= SIDEBAR ================= */
-
-    .sidebar{
-      width:260px;
-      height:100vh;
-      background:white;
-      padding:30px 20px;
-      display:flex;
-      flex-direction:column;
-      justify-content:space-between;
-      box-shadow:2px 0 10px rgba(0,0,0,0.05);
+    .sidebar {
+      width: 280px;
+      height: 100vh;
+      background: white;
+      padding: 40px 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      box-shadow: 4px 0 25px rgba(0, 0, 0, 0.02);
+      z-index: 10;
     }
 
-    .logo{
-      font-size:22px;
-      font-weight:700;
-      color:#09a35b;
-      margin-bottom:40px;
-      line-height:1.4;
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 40px;
     }
 
-    .menu a{
-      display:block;
-      text-decoration:none;
-      color:#6b7280;
-      padding:16px;
-      border-radius:12px;
-      margin-bottom:10px;
-      font-size:18px;
-      transition:0.3s;
+    .brand-icon {
+      background: var(--primary-light);
+      color: var(--primary);
+      width: 45px;
+      height: 45px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      box-shadow: 0 4px 10px rgba(9, 163, 91, 0.1);
+    }
+
+    .logo {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--primary);
+      line-height: 1.3;
+    }
+
+    .menu {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .menu a {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      text-decoration: none;
+      color: var(--text-muted);
+      padding: 14px 18px;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 500;
+      transition: all 0.3s ease;
     }
 
     .menu a:hover,
-    .active{
-      background:#e8faf0;
-      color:#09a35b;
-      font-weight:600;
+    .menu a.active {
+      background: var(--primary-light);
+      color: var(--primary);
+      font-weight: 600;
+      transform: translateX(4px);
     }
 
-    .menu i{
-      margin-right:12px;
+    .menu a i {
+      font-size: 18px;
     }
 
-    .logout{
-      color:#ef4444 !important;
+    .logout {
+      color: #ef4444 !important;
+    }
+    .logout:hover {
+      background: #fef2f2 !important;
+      transform: translateX(4px);
     }
 
-    /* ================= MAIN ================= */
-
-    .main{
-      flex:1;
-      padding:35px;
+    /* ================= MAIN CONTENT ================= */
+    .main {
+      flex: 1;
+      padding: 40px;
+      overflow-y: auto;
     }
 
-    .top{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      margin-bottom:25px;
+    .top-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 35px;
     }
 
-    .title{
-      font-size:42px;
-      font-weight:700;
-      color:#111827;
+    .title {
+      font-size: 32px;
+      font-weight: 700;
+      color: #111827;
+      letter-spacing: -0.5px;
     }
 
-    .subtitle{
-      color:#6b7280;
-      margin-top:5px;
-      font-size:15px;
+    .subtitle {
+      color: var(--text-muted);
+      margin-top: 4px;
+      font-size: 14px;
     }
 
-    .profile{
-      background:white;
-      padding:12px 20px;
-      border-radius:15px;
-      display:flex;
-      align-items:center;
-      gap:12px;
-      box-shadow:0 5px 15px rgba(0,0,0,0.05);
-      font-weight:600;
+    .profile-badge {
+      background: white;
+      padding: 10px 20px;
+      border-radius: 30px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: var(--card-shadow);
+      border: 1px solid rgba(0, 0, 0, 0.03);
+      transition: all 0.3s ease;
+    }
+    .profile-badge:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.05);
     }
 
-    .profile i{
-      background:#dff5e8;
-      color:#09a35b;
-      padding:12px;
-      border-radius:12px;
+    .profile-badge i {
+      background: var(--primary-light);
+      color: var(--primary);
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
     }
 
-    /* ================= DASHBOARD ================= */
-
-    .dashboard{
-      display:flex;
-      gap:20px;
-      align-items:stretch;
+    .profile-badge span {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-main);
     }
 
-    /* ================= MONITORING CARD ================= */
-
-    .monitoring-card{
-      flex:2;
-      background:white;
-      border-radius:30px;
-      padding:25px;
-      box-shadow:0 5px 20px rgba(0,0,0,0.05);
+    /* ================= DASHBOARD LAYOUT ================= */
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 1.8fr 1fr;
+      gap: 30px;
+      align-items: start;
     }
 
-    .live{
-      color:#09a35b;
-      font-weight:600;
-      margin-bottom:15px;
-      letter-spacing:2px;
-      font-size:14px;
+    /* ================= SENSOR CARD ================= */
+    .monitoring-card {
+      background: white;
+      border-radius: var(--radius);
+      padding: 30px;
+      box-shadow: var(--card-shadow);
+      border: 1px solid rgba(0, 0, 0, 0.02);
+      transition: all 0.3s ease;
     }
 
-    .monitoring-card h2{
-      font-size:28px;
-      margin-bottom:5px;
-      color:#111827;
+    .monitoring-card:hover {
+      box-shadow: var(--card-shadow-hover);
     }
 
-    .monitoring-card p{
-      color:#6b7280;
-      margin-bottom:15px;
+    .monitoring-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 25px;
+      border-bottom: 1.5px solid #f3f4f6;
+      padding-bottom: 20px;
     }
 
-    .sensor-title{
-      font-size:17px;
-      color:#374151;
-      margin-top:15px;
-      font-weight:600;
+    .monitoring-header h2 {
+      font-size: 22px;
+      font-weight: 700;
+      color: #111827;
     }
 
-    .status{
-      display:inline-block;
-      background:#dcfce7;
-      color:#15803d;
-      padding:6px 16px;
-      border-radius:20px;
-      font-size:13px;
-      font-weight:600;
-      margin-top:10px;
-      margin-bottom:10px;
+    .monitoring-header p {
+      color: var(--text-muted);
+      font-size: 13px;
+      margin-top: 2px;
     }
 
-    .percent{
-      font-size:50px;
-      font-weight:700;
-      margin-top:5px;
-      color:#111827;
+    .live-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #e8faf0;
+      color: #047857;
+      padding: 6px 14px;
+      border-radius: 30px;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
     }
 
-    .percent span{
-      font-size:28px;
-      color:#9ca3af;
+    .live-dot {
+      width: 8px;
+      height: 8px;
+      background: #10b981;
+      border-radius: 50%;
+      animation: pulse 1.8s infinite;
     }
 
-    .progress{
-      width:100%;
-      height:10px;
-      background:#e5e7eb;
-      border-radius:20px;
-      overflow:hidden;
-      margin-top:10px;
-      margin-bottom:10px;
+    @keyframes pulse {
+      0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+      70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
+      100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
     }
 
-    .progress-bar{
-      height:100%;
-      background:linear-gradient(to right,#09a35b,#5ee7a1);
+    /* Sensor Items Layout */
+    .sensors-container {
+      display: flex;
+      flex-direction: column;
+      gap: 25px;
     }
 
-    .level{
-      display:flex;
-      justify-content:space-between;
-      margin-top:10px;
-      color:#6b7280;
-      font-weight:600;
-      font-size:13px;
+    .sensor-item {
+      background: #f9fafb;
+      border-radius: 16px;
+      padding: 22px;
+      border: 1px solid #f3f4f6;
+      transition: all 0.3s ease;
+    }
+    .sensor-item:hover {
+      background: #ffffff;
+      border-color: rgba(9, 163, 91, 0.2);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.02);
+      transform: translateY(-2px);
     }
 
-    /* ================= PUMP CARD ================= */
-
-    .right{
-      flex:1;
-      display:flex;
-      flex-direction:column;
-      gap:15px;
+    .sensor-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
     }
 
-    .pump-card{
-      width:100%;
-      background:linear-gradient(to right,#2d143f,#1f2937);
-      color:white;
-      padding:22px;
-      border-radius:30px;
-      display:flex;
-      flex-direction:column;
-      justify-content:center;
-      flex:1;
-      box-shadow:0 5px 20px rgba(0,0,0,0.08);
+    .sensor-name {
+      font-size: 15px;
+      font-weight: 600;
+      color: #374151;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .sensor-name i {
+      color: #3b82f6;
     }
 
-    .pump-title{
-      font-size:18px;
-      margin-bottom:15px;
-      color:#d1d5db;
+    .status-badge {
+      display: inline-block;
+      padding: 6px 14px;
+      border-radius: 30px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
     }
 
-    .pump-status{
-      font-size:50px;
-      font-weight:700;
-      color:#fb7185;
+    .value-display {
+      display: flex;
+      align-items: baseline;
+      gap: 2px;
+      margin-bottom: 12px;
     }
 
-    .auto{
-      background:rgba(255,255,255,0.1);
-      display:inline-block;
-      padding:10px 18px;
-      border-radius:10px;
-      margin-top:15px;
-      width:fit-content;
-      font-size:14px;
+    .value-display .num {
+      font-size: 44px;
+      font-weight: 700;
+      color: #111827;
+      line-height: 1;
     }
 
-    .pump-card p{
-      margin-top:20px;
-      color:#d1d5db;
-      font-size:14px;
+    .value-display .unit {
+      font-size: 20px;
+      color: #9ca3af;
+      font-weight: 500;
+    }
+
+    /* Progress bar styling */
+    .progress-container {
+      width: 100%;
+      height: 8px;
+      background: #e5e7eb;
+      border-radius: 20px;
+      overflow: hidden;
+      margin-bottom: 10px;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      border-radius: 20px;
+      background: linear-gradient(90deg, #3b82f6, #60a5fa);
+      transition: width 1s ease-in-out;
+    }
+
+    .level-guide {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      font-weight: 600;
+      color: #9ca3af;
+      letter-spacing: 0.5px;
+    }
+
+    /* ================= PUMP CARDS (RIGHT SIDE) ================= */
+    .pumps-sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .pump-card {
+      width: 100%;
+      padding: 25px;
+      border-radius: var(--radius);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 200px;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: var(--card-shadow);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    /* Status ON (Green Theme) */
+    .pump-card.pump-on {
+      background: linear-gradient(135deg, #064e3b 0%, #022c22 100%);
+      box-shadow: 0 10px 30px rgba(4, 120, 87, 0.25);
+    }
+
+    /* Status OFF (Red/Dark Theme) */
+    .pump-card.pump-off {
+      background: linear-gradient(135deg, #4c0519 0%, #1f2937 100%);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    }
+
+    .pump-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 2;
+    }
+
+    .pump-icon-box {
+      width: 45px;
+      height: 45px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(5px);
+      color: white;
+    }
+
+    /* Glow effect for icon when active */
+    .pump-on .pump-icon-box {
+      background: rgba(16, 185, 129, 0.2);
+      color: #10b981;
+      box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
+    }
+
+    .auto-badge {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #e5e7eb;
+      padding: 6px 12px;
+      border-radius: 30px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .pump-center {
+      margin: 20px 0;
+      z-index: 2;
+    }
+
+    .pump-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.6);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .pump-status {
+      font-size: 48px;
+      font-weight: 800;
+      line-height: 1.1;
+      margin-top: 4px;
+      letter-spacing: -1px;
+    }
+
+    .pump-on .pump-status {
+      color: #34d399;
+      text-shadow: 0 0 20px rgba(52, 211, 153, 0.4);
+    }
+
+    .pump-off .pump-status {
+      color: #fca5a5;
+      text-shadow: 0 0 20px rgba(252, 165, 165, 0.2);
+    }
+
+    .pump-bottom {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.5);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      z-index: 2;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      padding-top: 12px;
+      margin-top: 10px;
+    }
+
+    /* Ambient background glowing blob */
+    .pump-card::after {
+      content: '';
+      position: absolute;
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      filter: blur(60px);
+      bottom: -30px;
+      right: -30px;
+      opacity: 0.15;
+      z-index: 1;
+      transition: all 0.5s ease;
+    }
+
+    .pump-on::after {
+      background: #10b981;
+      opacity: 0.35;
+    }
+
+    .pump-off::after {
+      background: #ef4444;
+      opacity: 0.15;
     }
 
     /* ================= RESPONSIVE ================= */
-
-    @media(max-width:900px){
-
-      body{
-        flex-direction:column;
+    @media (max-width: 1024px) {
+      .dashboard-grid {
+        grid-template-columns: 1fr;
+        gap: 25px;
       }
+    }
 
-      .sidebar{
-        width:100%;
-        height:auto;
-        padding:20px;
-      }
-
-      .sidebar > div {
-        display: flex;
+    @media (max-width: 768px) {
+      body {
         flex-direction: column;
-        align-items: center;
       }
 
-      .logo{
-        font-size:18px;
-        margin-bottom:20px;
-        text-align: center;
+      .sidebar {
+        width: 100%;
+        height: auto;
+        padding: 24px;
+        position: relative;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.02);
       }
 
-      .menu{
-        display: flex;
+      .brand {
+        margin-bottom: 20px;
+        justify-content: center;
+      }
+
+      .menu {
+        flex-direction: row;
         flex-wrap: wrap;
         justify-content: center;
-        gap: 10px;
-        width: 100%;
+        gap: 8px;
       }
 
-      .menu a{
-        margin-bottom: 0;
-        padding: 10px 15px;
-        font-size: 14px;
+      .menu a {
+        padding: 10px 14px;
+        font-size: 13px;
       }
 
-      .main{
-        padding:20px;
+      .main {
+        padding: 24px;
       }
 
-      .top{
+      .top-header {
         flex-direction: column;
         align-items: flex-start;
         gap: 15px;
       }
 
-      .title{
-        font-size:28px;
-      }
-
-      .dashboard{
-        flex-direction:column;
-      }
-
-      .monitoring-card {
-        padding: 20px;
-      }
-
-      .percent {
-        font-size: 40px;
-      }
-
-      .right {
-        flex-direction: column;
+      .profile-badge {
+        width: 100%;
+        justify-content: center;
       }
     }
-
   </style>
 </head>
-
 <body>
 
   <!-- ================= SIDEBAR ================= -->
-
   <div class="sidebar">
-
     <div>
-
-      <div class="logo">
-        Monitoring Kelembapan Tanah Dan Penyiraman Otomatis
+      <div class="brand">
+        <div class="brand-icon">
+          <i class="fa-solid fa-leaf"></i>
+        </div>
+        <div class="logo">
+          EcoGarden<br>
+          <span style="font-size: 10px; font-weight: 500; color: var(--text-muted);">Monitoring Lahan</span>
+        </div>
       </div>
 
       <div class="menu">
         <a href="#" class="active">
-          <i class="fa-solid fa-house"></i> Dashboard
+          <i class="fa-solid fa-chart-pie"></i> Dashboard
         </a>
-
         <a href="riwayat.html">
-          <i class="fa-solid fa-clock-rotate-left"></i> Riwayat
+          <i class="fa-solid fa-history"></i> Riwayat
         </a>
-
         <a href="aturbatas.html">
           <i class="fa-solid fa-sliders"></i> Atur Batas
         </a>
-
         <a href="profil.html">
-          <i class="fa-solid fa-user"></i> Profil
+          <i class="fa-solid fa-user-gear"></i> Profil
         </a>
       </div>
-
     </div>
 
-    <div class="menu">
+    <div class="menu" style="margin-top: 30px;">
       <a href="index.html" class="logout">
-        <i class="fa-solid fa-right-from-bracket"></i> Keluar
+        <i class="fa-solid fa-arrow-right-from-bracket"></i> Keluar
       </a>
     </div>
-
   </div>
 
   <!-- ================= MAIN ================= -->
-
   <div class="main">
-
-    <div class="top">
-
+    <div class="top-header">
       <div>
         <div class="title">Dashboard Utama</div>
-
-        <div class="subtitle">
-          Pantau kondisi tanah dan sistem penyiraman otomatis.
-        </div>
+        <div class="subtitle">Pantau kondisi kelembapan tanah dan kendali penyiraman otomatis.</div>
       </div>
 
-      <div class="profile">
+      <div class="profile-badge">
         <i class="fa-solid fa-user"></i>
-        <span id="profileUsername"></span>
+        <span id="profileUsername">Memuat...</span>
       </div>
-
     </div>
 
-    <!-- ================= DASHBOARD ================= -->
+    <!-- ================= DASHBOARD GRID ================= -->
+    <div class="dashboard-grid">
 
-    <div class="dashboard">
-
-      <!-- ================= SENSOR ================= -->
-
+      <!-- ================= SENSOR CARDS ================= -->
       <div class="monitoring-card">
-
-        <div class="live">● LIVE MONITORING</div>
-
-        <h2>Kelembapan Tanah</h2>
-
-        <p>Update real-time dari 2 sensor.</p>
-
-        <!-- SENSOR 1 -->
-
-        <div class="sensor-title">Sensor 1</div>
-
-        <div class="status" id="sensor1Status">MEMUAT...</div>
-
-        <div class="percent"><span id="sensor1Value">--</span><span>%</span></div>
-
-        <div class="progress">
-          <div class="progress-bar" id="sensor1Bar" style="width:0%"></div>
+        <div class="monitoring-header">
+          <div>
+            <h2>Kelembapan Tanah</h2>
+            <p>Update sensor real-time dari Firebase</p>
+          </div>
+          <div class="live-badge">
+            <span class="live-dot"></span>
+            Live Lahan
+          </div>
         </div>
 
-        <div class="level">
-          <span>KERING</span>
-          <span>LEMBAP</span>
-          <span>BASAH</span>
+        <div class="sensors-container">
+          <!-- SENSOR 1 -->
+          <div class="sensor-item">
+            <div class="sensor-meta">
+              <span class="sensor-name">
+                <i class="fa-solid fa-droplet" style="color: #3b82f6;"></i> Sensor Zona 1
+              </span>
+              <span class="status-badge" id="sensor1Status">MEMUAT...</span>
+            </div>
+            <div class="value-display">
+              <span class="num" id="sensor1Value">--</span>
+              <span class="unit">%</span>
+            </div>
+            <div class="progress-container">
+              <div class="progress-bar-fill" id="sensor1Bar" style="width:0%; background: linear-gradient(90deg, #3b82f6, #60a5fa);"></div>
+            </div>
+            <div class="level-guide">
+              <span>KERING</span>
+              <span>LEMBAP</span>
+              <span>BASAH</span>
+            </div>
+          </div>
+
+          <!-- SENSOR 2 -->
+          <div class="sensor-item">
+            <div class="sensor-meta">
+              <span class="sensor-name">
+                <i class="fa-solid fa-droplet" style="color: #06b6d4;"></i> Sensor Zona 2
+              </span>
+              <span class="status-badge" id="sensor2Status">MEMUAT...</span>
+            </div>
+            <div class="value-display">
+              <span class="num" id="sensor2Value">--</span>
+              <span class="unit">%</span>
+            </div>
+            <div class="progress-container">
+              <div class="progress-bar-fill" id="sensor2Bar" style="width:0%; background: linear-gradient(90deg, #06b6d4, #22d3ee);"></div>
+            </div>
+            <div class="level-guide">
+              <span>KERING</span>
+              <span>LEMBAP</span>
+              <span>BASAH</span>
+            </div>
+          </div>
         </div>
-
-        <!-- SENSOR 2 -->
-
-        <div class="sensor-title">Sensor 2</div>
-
-        <div class="status" id="sensor2Status">MEMUAT...</div>
-
-        <div class="percent"><span id="sensor2Value">--</span><span>%</span></div>
-
-        <div class="progress">
-          <div class="progress-bar" id="sensor2Bar" style="width:0%"></div>
-        </div>
-
-        <div class="level">
-          <span>KERING</span>
-          <span>LEMBAP</span>
-          <span>BASAH</span>
-        </div>
-
       </div>
 
-      <!-- ================= POMPA ================= -->
-
-      <div class="right">
+      <!-- ================= PUMP CARDS ================= -->
+      <div class="pumps-sidebar">
 
         <!-- POMPA 1 -->
-        <div class="pump-card">
-
-          <div class="pump-title">
-            POMPA AIR 1
+        <div class="pump-card pump-off" id="pumpCard1">
+          <div class="pump-top">
+            <div class="pump-icon-box">
+              <i class="fa-solid fa-circle-nodes"></i>
+            </div>
+            <div class="auto-badge">
+              <i class="fa-solid fa-robot"></i> Otomatis
+            </div>
           </div>
-
-          <div class="pump-status" id="pumpStatus">
-            MEMUAT...
+          <div class="pump-center">
+            <div class="pump-label">Pompa Air Lahan 1</div>
+            <div class="pump-status" id="pumpStatus">OFF</div>
           </div>
-
-          <div class="auto">
-            ● Otomatis
+          <div class="pump-bottom">
+            <i class="fa-regular fa-clock"></i>
+            <span id="pumpLastTime">Penyiraman terakhir: -</span>
           </div>
-
-          <p id="pumpLastTime">
-            Penyiraman terakhir: -
-          </p>
-
         </div>
 
         <!-- POMPA 2 -->
-        <div class="pump-card">
-
-          <div class="pump-title">
-            POMPA AIR 2
+        <div class="pump-card pump-off" id="pumpCard2">
+          <div class="pump-top">
+            <div class="pump-icon-box">
+              <i class="fa-solid fa-circle-nodes"></i>
+            </div>
+            <div class="auto-badge">
+              <i class="fa-solid fa-robot"></i> Otomatis
+            </div>
           </div>
-
-          <div class="pump-status" id="pump2Status">
-            MEMUAT...
+          <div class="pump-center">
+            <div class="pump-label">Pompa Air Lahan 2</div>
+            <div class="pump-status" id="pump2Status">OFF</div>
           </div>
-
-          <div class="auto">
-            ● Otomatis
+          <div class="pump-bottom">
+            <i class="fa-regular fa-clock"></i>
+            <span id="pump2LastTime">Penyiraman terakhir: -</span>
           </div>
-
-          <p id="pump2LastTime">
-            Penyiraman terakhir: -
-          </p>
-
         </div>
 
       </div>
 
     </div>
-
   </div>
 
+  <!-- ================= FIREBASE LOGIC ================= -->
   <script type="module">
+    import { db, ref, onValue } from "./firebase.js";
 
-    import { db, ref, onValue, set } from "./firebase.js";
-
-    // ================= USER PROFILE (localStorage) =================
-    let loginUser = localStorage.getItem("loginUser");
+    // profile username dari localStorage
+    const loginUser = localStorage.getItem("loginUser") || "User";
     document.getElementById("profileUsername").innerText = loginUser;
 
     console.log("🔥 Firebase: Menghubungkan ke database...");
 
-    // ================= HELPER: Tentukan status berdasarkan kelembapan =================
+    // Helper: Tentukan status berdasarkan kelembapan
     function getStatus(value, batasKering, batasLembab) {
-      if (value <= batasKering) return { text: "KERING", color: "#dc2626", bg: "#fee2e2" };
-      if (value <= batasLembab) return { text: "LEMBAP", color: "#15803d", bg: "#dcfce7" };
-      return { text: "BASAH", color: "#2563eb", bg: "#dbeafe" };
+      if (value <= batasKering) {
+        return { text: "KERING", color: "#b91c1c", bg: "#fee2e2" };
+      } else if (value <= batasLembab) {
+        return { text: "LEMBAP", color: "#047857", bg: "#e8faf0" };
+      } else {
+        return { text: "BASAH", color: "#1d4ed8", bg: "#dbeafe" };
+      }
     }
 
-    // ================= UPDATE UI SENSOR =================
+    // UPDATE UI SENSOR
     function updateSensor(sensorNum, data) {
       const kelembapan = data.kelembapan ?? 0;
       const batasKering = data.bataskering ?? 30;
@@ -524,6 +737,7 @@
 
       document.getElementById("sensor" + sensorNum + "Value").textContent = kelembapan;
       document.getElementById("sensor" + sensorNum + "Bar").style.width = kelembapan + "%";
+      
       const statusEl = document.getElementById("sensor" + sensorNum + "Status");
       statusEl.textContent = status.text;
       statusEl.style.background = status.bg;
@@ -531,7 +745,7 @@
     }
 
     function showSensorError(sensorNum, message) {
-      document.getElementById("sensor" + sensorNum + "Value").textContent = "0";
+      document.getElementById("sensor" + sensorNum + "Value").textContent = "--";
       document.getElementById("sensor" + sensorNum + "Bar").style.width = "0%";
       const statusEl = document.getElementById("sensor" + sensorNum + "Status");
       statusEl.textContent = message;
@@ -539,12 +753,10 @@
       statusEl.style.color = "#d97706";
     }
 
-    // ================= SENSOR 1: Realtime dari Firebase =================
+    // SENSOR 1
     const sensor1Ref = ref(db, "/sensor1");
     onValue(sensor1Ref, (snapshot) => {
       const data = snapshot.val();
-      console.log("📡 Sensor 1 data:", data);
-
       if (!data) {
         showSensorError(1, "BELUM ADA DATA");
         return;
@@ -552,16 +764,13 @@
       updateSensor(1, data);
     }, (error) => {
       console.error("❌ Sensor 1 error:", error.message);
-      showSensorError(1, "ERROR: " + error.code);
-      alert("Firebase Error pada Sensor 1: " + error.message + "\n\nPastikan Rules di Firebase Console diset:\n{\n  \"rules\": {\n    \".read\": true,\n    \".write\": true\n  }\n}");
+      showSensorError(1, "ERROR");
     });
 
-    // ================= SENSOR 2: Realtime dari Firebase =================
+    // SENSOR 2
     const sensor2Ref = ref(db, "/sensor2");
     onValue(sensor2Ref, (snapshot) => {
       const data = snapshot.val();
-      console.log("📡 Sensor 2 data:", data);
-
       if (!data) {
         showSensorError(2, "BELUM ADA DATA");
         return;
@@ -569,53 +778,61 @@
       updateSensor(2, data);
     }, (error) => {
       console.error("❌ Sensor 2 error:", error.message);
-      showSensorError(2, "ERROR: " + error.code);
+      showSensorError(2, "ERROR");
     });
 
-    // ================= HELPER: Update Pompa UI =================
-    function updatePompa(statusElId, timeElId, data) {
+    // UPDATE POMPA UI
+    function updatePompa(statusElId, timeElId, cardId, data) {
       const pumpStatusEl = document.getElementById(statusElId);
       const pumpLastTimeEl = document.getElementById(timeElId);
+      const cardEl = document.getElementById(cardId);
 
       if (!data) {
-        pumpStatusEl.textContent = "BELUM ADA DATA";
-        pumpStatusEl.style.color = "#d97706";
+        pumpStatusEl.textContent = "OFF";
+        cardEl.className = "pump-card pump-off";
         pumpLastTimeEl.textContent = "Penyiraman terakhir: -";
         return;
       }
 
       const statusPompa = data.status || "MATI";
       const terakhir = data.terakhir || "-";
+      const isOn = statusPompa === "MENYALA" || statusPompa === "ON";
 
-      pumpStatusEl.textContent = statusPompa;
-      pumpStatusEl.style.color = statusPompa === "MENYALA" ? "#4ade80" : "#fb7185";
+      pumpStatusEl.textContent = isOn ? "ON" : "OFF";
+      
+      // Toggle class
+      if (isOn) {
+        cardEl.classList.remove("pump-off");
+        cardEl.classList.add("pump-on");
+      } else {
+        cardEl.classList.remove("pump-on");
+        cardEl.classList.add("pump-off");
+      }
+
       pumpLastTimeEl.textContent = "Penyiraman terakhir: " + terakhir;
     }
 
-    // ================= POMPA 1: Realtime dari Firebase =================
+    // POMPA 1
     const pompaRef = ref(db, "/pompa1");
     onValue(pompaRef, (snapshot) => {
       const data = snapshot.val();
-      console.log("📡 Pompa 1 data:", data);
-      updatePompa("pumpStatus", "pumpLastTime", data);
+      updatePompa("pumpStatus", "pumpLastTime", "pumpCard1", data);
     }, (error) => {
       console.error("❌ Pompa 1 error:", error.message);
       document.getElementById("pumpStatus").textContent = "ERROR";
-      document.getElementById("pumpStatus").style.color = "#dc2626";
+      document.getElementById("pumpCard1").className = "pump-card pump-off";
     });
 
-    // ================= POMPA 2: Realtime dari Firebase =================
+    // POMPA 2
     const pompa2Ref = ref(db, "/pompa2");
     onValue(pompa2Ref, (snapshot) => {
       const data = snapshot.val();
-      console.log("📡 Pompa 2 data:", data);
-      updatePompa("pump2Status", "pump2LastTime", data);
+      updatePompa("pump2Status", "pump2LastTime", "pumpCard2", data);
     }, (error) => {
       console.error("❌ Pompa 2 error:", error.message);
       document.getElementById("pump2Status").textContent = "ERROR";
-      document.getElementById("pump2Status").style.color = "#dc2626";
+      document.getElementById("pumpCard2").className = "pump-card pump-off";
     });
-
   </script>
 
 </body>
