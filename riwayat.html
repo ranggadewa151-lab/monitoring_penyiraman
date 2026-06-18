@@ -3,495 +3,559 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Riwayat Monitoring</title>
+  <title>Riwayat Monitoring - Monitoring Kelembapan Tanah Dan Penyiraman Otomatis</title>
 
-  <link rel="stylesheet"
-  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
+  <!-- Google Font -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
   <style>
-
-    *{
-      margin:0;
-      padding:0;
-      box-sizing:border-box;
-      font-family:'Poppins', sans-serif;
+    :root {
+      --primary: #09a35b;
+      --primary-hover: #07884c;
+      --primary-light: #e8faf0;
+      --bg-gradient: linear-gradient(135deg, #f4f9f6 0%, #e9f5ee 100%);
+      --text-main: #1f2937;
+      --text-muted: #6b7280;
+      --card-shadow: 0 10px 25px rgba(0, 0, 0, 0.03);
+      --card-shadow-hover: 0 15px 35px rgba(9, 163, 91, 0.1);
+      --radius: 20px;
     }
 
-    body{
-      display:flex;
-      background:linear-gradient(to right,#f8f8f8,#dff5e8);
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
     }
 
-    .sidebar{
-      width:260px;
-      height:100vh;
-      background:white;
-      padding:30px 20px;
-      display:flex;
-      flex-direction:column;
-      justify-content:space-between;
-      box-shadow:2px 0 10px rgba(0,0,0,0.05);
+    body {
+      display: flex;
+      background: var(--bg-gradient);
+      min-height: 100vh;
+      color: var(--text-main);
     }
 
-    .logo{
-      font-size:22px;
-      font-weight:700;
-      color:#09a35b;
-      margin-bottom:40px;
+    /* ================= SIDEBAR ================= */
+    .sidebar {
+      width: 280px;
+      height: 100vh;
+      background: white;
+      padding: 40px 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      box-shadow: 4px 0 25px rgba(0, 0, 0, 0.02);
+      z-index: 10;
     }
 
-    .menu a{
-      display:block;
-      text-decoration:none;
-      color:#6b7280;
-      padding:16px;
-      border-radius:12px;
-      margin-bottom:10px;
-      font-size:18px;
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 40px;
+    }
+
+    .brand-icon {
+      background: var(--primary-light);
+      color: var(--primary);
+      width: 45px;
+      height: 45px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      box-shadow: 0 4px 10px rgba(9, 163, 91, 0.1);
+    }
+
+    .logo {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--primary);
+      line-height: 1.3;
+    }
+
+    .menu {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .menu a {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      text-decoration: none;
+      color: var(--text-muted);
+      padding: 14px 18px;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 500;
+      transition: all 0.3s ease;
     }
 
     .menu a:hover,
-    .active{
-      background:#e8faf0;
-      color:#09a35b;
-      font-weight:600;
+    .menu a.active {
+      background: var(--primary-light);
+      color: var(--primary);
+      font-weight: 600;
+      transform: translateX(4px);
     }
 
-    .menu i{
-      margin-right:12px;
+    .menu a i {
+      font-size: 18px;
     }
 
-    .logout{
-      color:#ef4444 !important;
+    .logout {
+      color: #ef4444 !important;
+    }
+    .logout:hover {
+      background: #fef2f2 !important;
+      transform: translateX(4px);
     }
 
-    .main{
-      flex:1;
-      padding:40px;
+    /* ================= MAIN CONTENT ================= */
+    .main {
+      flex: 1;
+      padding: 40px;
+      overflow-y: auto;
     }
 
-    .top{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      margin-bottom:30px;
+    .top-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 35px;
     }
 
-    .title{
-      font-size:45px;
-      font-weight:700;
+    .title {
+      font-size: 32px;
+      font-weight: 700;
+      color: #111827;
+      letter-spacing: -0.5px;
     }
 
-    .subtitle{
-      color:#6b7280;
-      margin-top:5px;
+    .subtitle {
+      color: var(--text-muted);
+      margin-top: 4px;
+      font-size: 14px;
     }
 
-    .profile{
-      background:white;
-      padding:12px 20px;
-      border-radius:15px;
-      display:flex;
-      align-items:center;
-      gap:12px;
-      box-shadow:0 5px 15px rgba(0,0,0,0.05);
-      font-weight:600;
+    .profile-badge {
+      background: white;
+      padding: 10px 20px;
+      border-radius: 30px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: var(--card-shadow);
+      border: 1px solid rgba(0, 0, 0, 0.03);
+      transition: all 0.3s ease;
+    }
+    .profile-badge:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.05);
     }
 
-    .profile i{
-      background:#dff5e8;
-      color:#09a35b;
-      padding:12px;
-      border-radius:12px;
+    .profile-badge i {
+      background: var(--primary-light);
+      color: var(--primary);
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
     }
 
-    /* ===== HAPUS SEMUA BUTTON ===== */
-    .table-header{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      margin-bottom:20px;
+    .profile-badge span {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-main);
     }
 
-    .table-title{
-      font-size:18px;
-      font-weight:600;
-      color:#374151;
+    /* ================= TABLE CONTAINER ================= */
+    .table-container {
+      background: white;
+      border-radius: var(--radius);
+      padding: 30px;
+      box-shadow: var(--card-shadow);
+      border: 1px solid rgba(0, 0, 0, 0.02);
+      transition: all 0.3s ease;
+    }
+    .table-container:hover {
+      box-shadow: var(--card-shadow-hover);
     }
 
-    .btn-hapus-semua{
-      background:linear-gradient(135deg, #ef4444, #dc2626);
-      color:white;
-      border:none;
-      padding:11px 22px;
-      border-radius:12px;
-      font-size:14px;
-      font-weight:600;
-      font-family:'Poppins', sans-serif;
-      cursor:pointer;
-      display:flex;
-      align-items:center;
-      gap:8px;
-      box-shadow:0 4px 12px rgba(239,68,68,0.3);
-      transition:all 0.25s ease;
+    .table-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+      border-bottom: 1.5px solid #f3f4f6;
+      padding-bottom: 20px;
     }
 
-    .btn-hapus-semua:hover{
-      transform:translateY(-2px);
-      box-shadow:0 6px 18px rgba(239,68,68,0.4);
+    .table-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #111827;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .table-title i {
+      color: var(--primary);
+      font-size: 20px;
     }
 
-    .btn-hapus-semua:active{
-      transform:translateY(0);
+    .btn-hapus-semua {
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+      transition: all 0.3s ease;
     }
 
-    .btn-hapus-semua:disabled{
-      opacity:0.5;
-      cursor:not-allowed;
-      transform:none;
+    .btn-hapus-semua:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(239, 68, 68, 0.3);
     }
 
-    .table-container{
-      background:white;
-      border-radius:30px;
-      padding:30px;
-      box-shadow:0 5px 20px rgba(0,0,0,0.05);
+    .btn-hapus-semua:disabled {
+      background: #d1d5db;
+      box-shadow: none;
+      cursor: not-allowed;
+      transform: none;
+      color: #9ca3af;
     }
 
-    table{
-      width:100%;
-      border-collapse:collapse;
+    /* Modern Table design */
+    .table-responsive {
+      overflow-x: auto;
+      width: 100%;
     }
 
-    th{
-      background:#09a35b;
-      color:white;
-      padding:18px;
-      text-align:left;
-      font-size:16px;
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
     }
 
-    th:first-child{ border-radius:10px 0 0 10px; }
-    th:last-child{ border-radius:0 10px 10px 0; }
-
-    td{
-      padding:18px;
-      border-bottom:1px solid #e5e7eb;
-      color:#374151;
+    th {
+      background: #f9fafb;
+      color: #374151;
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 16px 20px;
+      border-bottom: 2px solid #e5e7eb;
     }
 
-    tr:hover td{
-      background:#f9fafb;
+    td {
+      padding: 16px 20px;
+      border-bottom: 1px solid #f3f4f6;
+      color: #4b5563;
+      font-size: 14px;
+      font-weight: 500;
     }
 
-    .status{
-      padding:8px 15px;
-      border-radius:20px;
-      font-size:14px;
-      font-weight:600;
-      display:inline-block;
+    tr:hover td {
+      background: #f9fafb;
     }
 
-    .kering{
-      background:#fee2e2;
-      color:#dc2626;
+    /* Status badges */
+    .status-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 30px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
     }
 
-    .lembap{
-      background:#dcfce7;
-      color:#15803d;
+    .status-badge.kering {
+      background: #fee2e2;
+      color: #b91c1c;
     }
 
-    .basah{
-      background:#dbeafe;
-      color:#2563eb;
+    .status-badge.lembap {
+      background: #e8faf0;
+      color: #047857;
     }
 
-    /* ===== TOMBOL HAPUS PER BARIS ===== */
-    .btn-hapus-row{
-      background:none;
-      border:none;
-      cursor:pointer;
-      color:#d1d5db;
-      font-size:16px;
-      padding:6px 10px;
-      border-radius:8px;
-      transition:all 0.2s ease;
+    .status-badge.basah {
+      background: #dbeafe;
+      color: #1d4ed8;
     }
 
-    .btn-hapus-row:hover{
-      background:#fee2e2;
-      color:#ef4444;
-      transform:scale(1.15);
+    .btn-hapus-row {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #9ca3af;
+      font-size: 15px;
+      padding: 6px;
+      border-radius: 8px;
+      transition: all 0.2s ease;
     }
 
-    /* ===== MODAL KONFIRMASI ===== */
-    .modal-overlay{
-      display:none;
-      position:fixed;
-      inset:0;
-      background:rgba(0,0,0,0.45);
-      backdrop-filter:blur(4px);
-      z-index:999;
-      justify-content:center;
-      align-items:center;
-      animation:fadeIn 0.2s ease;
+    .btn-hapus-row:hover {
+      background: #fee2e2;
+      color: #ef4444;
+      transform: scale(1.1);
     }
 
-    .modal-overlay.show{
-      display:flex;
+    /* ================= MODAL DIALOG ================= */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(17, 24, 39, 0.4);
+      backdrop-filter: blur(8px);
+      z-index: 999;
+      justify-content: center;
+      align-items: center;
+      animation: fadeIn 0.3s ease;
     }
 
-    @keyframes fadeIn{
-      from{ opacity:0; }
-      to{ opacity:1; }
+    .modal-overlay.show {
+      display: flex;
     }
 
-    .modal-box{
-      background:white;
-      border-radius:24px;
-      padding:36px 40px;
-      max-width:400px;
-      width:90%;
-      text-align:center;
-      box-shadow:0 20px 60px rgba(0,0,0,0.15);
-      animation:slideUp 0.25s ease;
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
     }
 
-    @keyframes slideUp{
-      from{ transform:translateY(30px); opacity:0; }
-      to{ transform:translateY(0); opacity:1; }
+    .modal-box {
+      background: white;
+      border-radius: 24px;
+      padding: 35px;
+      max-width: 400px;
+      width: 90%;
+      text-align: center;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+      animation: slideUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 
-    .modal-icon{
-      font-size:48px;
-      margin-bottom:16px;
+    @keyframes slideUp {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
     }
 
-    .modal-title{
-      font-size:20px;
-      font-weight:700;
-      color:#111827;
-      margin-bottom:10px;
+    .modal-icon {
+      font-size: 44px;
+      margin-bottom: 15px;
+      color: #ef4444;
     }
 
-    .modal-desc{
-      font-size:14px;
-      color:#6b7280;
-      margin-bottom:28px;
-      line-height:1.6;
+    .modal-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: #111827;
+      margin-bottom: 10px;
     }
 
-    .modal-actions{
-      display:flex;
-      gap:12px;
-      justify-content:center;
+    .modal-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 25px;
+      line-height: 1.5;
     }
 
-    .btn-batal{
-      flex:1;
-      padding:12px 20px;
-      border-radius:12px;
-      border:2px solid #e5e7eb;
-      background:white;
-      color:#374151;
-      font-size:14px;
-      font-weight:600;
-      font-family:'Poppins', sans-serif;
-      cursor:pointer;
-      transition:all 0.2s ease;
+    .modal-actions {
+      display: flex;
+      gap: 12px;
     }
 
-    .btn-batal:hover{
-      background:#f9fafb;
-      border-color:#d1d5db;
+    .btn-batal {
+      flex: 1;
+      padding: 12px;
+      border-radius: 12px;
+      border: 1.5px solid #e5e7eb;
+      background: white;
+      color: #374151;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 13px;
+      transition: all 0.2s ease;
     }
 
-    .btn-konfirm-hapus{
-      flex:1;
-      padding:12px 20px;
-      border-radius:12px;
-      border:none;
-      background:linear-gradient(135deg, #ef4444, #dc2626);
-      color:white;
-      font-size:14px;
-      font-weight:600;
-      font-family:'Poppins', sans-serif;
-      cursor:pointer;
-      box-shadow:0 4px 12px rgba(239,68,68,0.3);
-      transition:all 0.2s ease;
+    .btn-batal:hover {
+      background: #f9fafb;
     }
 
-    .btn-konfirm-hapus:hover{
-      transform:translateY(-1px);
-      box-shadow:0 6px 16px rgba(239,68,68,0.4);
+    .btn-konfirm-hapus {
+      flex: 1;
+      padding: 12px;
+      border-radius: 12px;
+      border: none;
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 13px;
+      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+      transition: all 0.2s ease;
     }
 
-    /* ===== TOAST NOTIFIKASI ===== */
-    .toast{
-      position:fixed;
-      bottom:28px;
-      right:28px;
-      padding:14px 22px;
-      border-radius:14px;
-      font-size:14px;
-      font-weight:600;
-      color:white;
-      display:flex;
-      align-items:center;
-      gap:10px;
-      box-shadow:0 8px 24px rgba(0,0,0,0.15);
-      z-index:9999;
-      transform:translateY(80px);
-      opacity:0;
-      transition:all 0.35s cubic-bezier(0.34,1.56,0.64,1);
+    .btn-konfirm-hapus:hover {
+      box-shadow: 0 6px 16px rgba(239, 68, 68, 0.3);
     }
 
-    .toast.show{
-      transform:translateY(0);
-      opacity:1;
+    /* ================= TOAST NOTIFICATION ================= */
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      padding: 14px 22px;
+      border-radius: 14px;
+      font-size: 13px;
+      font-weight: 600;
+      color: white;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      z-index: 9999;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 
-    .toast.sukses{ background:linear-gradient(135deg,#09a35b,#059669); }
-    .toast.error{ background:linear-gradient(135deg,#ef4444,#dc2626); }
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .toast.sukses { background: linear-gradient(135deg, #09a35b, #059669); }
+    .toast.error { background: linear-gradient(135deg, #ef4444, #dc2626); }
 
     /* ================= RESPONSIVE ================= */
-
-    @media(max-width:900px){
-
-      body{
-        flex-direction:column;
-      }
-
-      .sidebar{
-        width:100%;
-        height:auto;
-        padding:20px;
-      }
-
-      .sidebar > div {
-        display: flex;
+    @media (max-width: 900px) {
+      body {
         flex-direction: column;
-        align-items: center;
       }
 
-      .logo{
-        font-size:18px;
-        margin-bottom:20px;
-        text-align: center;
+      .sidebar {
+        width: 100%;
+        height: auto;
+        padding: 24px;
+        position: relative;
       }
 
-      .menu{
-        display: flex;
+      .brand {
+        margin-bottom: 20px;
+        justify-content: center;
+      }
+
+      .menu {
+        flex-direction: row;
         flex-wrap: wrap;
         justify-content: center;
-        gap: 10px;
-        width: 100%;
+        gap: 8px;
       }
 
-      .menu a{
-        margin-bottom: 0;
-        padding: 10px 15px;
-        font-size: 14px;
+      .menu a {
+        padding: 10px 14px;
+        font-size: 13px;
       }
 
-      .main{
-        padding:20px;
+      .main {
+        padding: 24px;
       }
 
-      .top{
+      .top-header {
         flex-direction: column;
         align-items: flex-start;
         gap: 15px;
       }
 
-      .title{
-        font-size:28px;
+      .profile-badge {
+        width: 100%;
+        justify-content: center;
       }
 
-      .table-container{
+      .table-container {
         padding: 15px;
-        overflow-x: auto;
-      }
-
-      th, td {
-        padding: 12px;
-        font-size: 14px;
       }
     }
-
   </style>
 </head>
-
 <body>
 
-  <!-- SIDEBAR -->
+  <!-- ================= SIDEBAR ================= -->
   <div class="sidebar">
-
     <div>
-
-      <div class="logo">
-        Monitoring Kelembapan Tanah Dan Penyiraman Otomatis
+      <div class="brand">
+        <div class="brand-icon">
+          <i class="fa-solid fa-leaf"></i>
+        </div>
+        <div class="logo" style="font-size: 13px;">
+          Monitoring Kelembapan Tanah<br>
+          <span style="font-size: 10px; font-weight: 500; color: var(--text-muted);">Dan Penyiraman Otomatis</span>
+        </div>
       </div>
 
       <div class="menu">
-
         <a href="dashboard.html">
-          <i class="fa-solid fa-house"></i> Dashboard
+          <i class="fa-solid fa-chart-pie"></i> Dashboard
         </a>
-
         <a href="#" class="active">
-          <i class="fa-solid fa-clock-rotate-left"></i> Riwayat
+          <i class="fa-solid fa-history"></i> Riwayat
         </a>
-
         <a href="aturbatas.html">
           <i class="fa-solid fa-sliders"></i> Atur Batas
         </a>
-
         <a href="profil.html">
-          <i class="fa-solid fa-user"></i> Profil
+          <i class="fa-solid fa-user-gear"></i> Profil
         </a>
-
       </div>
-
     </div>
 
-    <div class="menu">
-
+    <div class="menu" style="margin-top: 30px;">
       <a href="index.html" class="logout">
-        <i class="fa-solid fa-right-from-bracket"></i> Keluar
+        <i class="fa-solid fa-arrow-right-from-bracket"></i> Keluar
       </a>
-
     </div>
-
   </div>
 
-  <!-- MAIN -->
+  <!-- ================= MAIN CONTENT ================= -->
   <div class="main">
-
-    <div class="top">
-
+    <div class="top-header">
       <div>
         <div class="title">Riwayat Monitoring</div>
-        <div class="subtitle">Data hasil monitoring kelembapan tanah.</div>
+        <div class="subtitle">Data historis hasil monitoring kelembapan tanah lahan.</div>
       </div>
 
-      <div class="profile">
+      <div class="profile-badge">
         <i class="fa-solid fa-user"></i>
-        <span id="profileUsername"></span>
+        <span id="profileUsername">Memuat...</span>
       </div>
-
     </div>
 
-    <!-- TABLE -->
+    <!-- ================= TABLE DATA ================= -->
     <div class="table-container">
-
       <div class="table-header">
         <div class="table-title">
-          <i class="fa-solid fa-table-list" style="color:#09a35b;margin-right:8px;"></i>
-          Data Riwayat
+          <i class="fa-solid fa-table-list"></i>
+          Data Log Riwayat
         </div>
         <button class="btn-hapus-semua" id="btnHapusSemua" onclick="konfirmasiHapusSemua()">
           <i class="fa-solid fa-trash-can"></i>
@@ -499,38 +563,37 @@
         </button>
       </div>
 
-      <table>
-
-        <thead>
-          <tr>
-            <th>No</th>
-            <th>Waktu</th>
-            <th>Sensor 1</th>
-            <th>Sensor 2</th>
-            <th>Pompa 1</th>
-            <th>Pompa 2</th>
-            <th style="text-align:center;">Hapus</th>
-          </tr>
-        </thead>
-
-        <tbody id="riwayatBody">
-          <tr>
-            <td colspan="7" style="text-align:center;color:#9ca3af;padding:30px;">
-              Memuat data dari Firebase...
-            </td>
-          </tr>
-        </tbody>
-
-      </table>
-
+      <div class="table-responsive">
+        <table>
+          <thead>
+            <tr>
+              <th>No</th>
+              <th>Waktu</th>
+              <th>Sensor 1</th>
+              <th>Sensor 2</th>
+              <th>Pompa 1</th>
+              <th>Pompa 2</th>
+              <th style="text-align:center;">Hapus</th>
+            </tr>
+          </thead>
+          <tbody id="riwayatBody">
+            <tr>
+              <td colspan="7" style="text-align:center;color:#9ca3af;padding:30px;">
+                Memuat data dari Firebase...
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
-
   </div>
 
   <!-- MODAL KONFIRMASI HAPUS -->
   <div class="modal-overlay" id="modalHapus">
     <div class="modal-box">
-      <div class="modal-icon">🗑️</div>
+      <div class="modal-icon">
+        <i class="fa-solid fa-circle-exclamation"></i>
+      </div>
       <div class="modal-title" id="modalTitle">Hapus Riwayat?</div>
       <div class="modal-desc" id="modalDesc">
         Data yang dihapus tidak dapat dikembalikan. Yakin ingin menghapus?
@@ -552,20 +615,20 @@
     <span id="toastMsg"></span>
   </div>
 
+  <!-- ================= FIREBASE LOGIC ================= -->
   <script type="module">
+    import { db, ref, onValue, query, orderByKey, limitToLast, remove } from "./firebase.js";
 
-    import { db, ref, onValue, query, orderByKey, limitToLast, remove } from "./firebase.js?v=3";
-
-    // ================= USER PROFILE (localStorage) =================
-    let loginUser = localStorage.getItem("loginUser");
+    // profile username dari localStorage
+    const loginUser = localStorage.getItem("loginUser") || "User";
     document.getElementById("profileUsername").innerText = loginUser;
 
-    // ================= STATE =================
-    let pendingHapusId   = null;  // ID satu baris yang akan dihapus
-    let pendingHapusSemua = false; // flag hapus semua
+    // STATE HAPUS
+    let pendingHapusId = null;
+    let pendingHapusSemua = false;
 
-    // ================= BACA RIWAYAT DARI FIREBASE =================
-    const riwayatRef   = ref(db, "/riwayat");
+    // BACA RIWAYAT DARI FIREBASE
+    const riwayatRef = ref(db, "/riwayat");
     const riwayatQuery = query(riwayatRef, orderByKey(), limitToLast(50));
 
     onValue(riwayatQuery, (snapshot) => {
@@ -598,17 +661,28 @@
         return 0;
       });
 
-      // Generate tabel dengan tombol hapus per baris
+      // Generate tabel
       let html = "";
       entries.forEach((item, index) => {
+        const pompa1 = (item.pompa1 || item.pompa || "-").toUpperCase();
+        const pompa2 = (item.pompa2 || "-").toUpperCase();
+
         html += `
           <tr id="row-${item.id}">
             <td>${index + 1}</td>
-            <td>${item.waktu || "-"}</td>
-            <td>${item.sensor1 || 0}%</td>
-            <td>${item.sensor2 || 0}%</td>
-            <td>${item.pompa1 || item.pompa || "-"}</td>
-            <td>${item.pompa2 || "-"}</td>
+            <td style="font-weight:600; color:#111827;">${item.waktu || "-"}</td>
+            <td><span class="status-badge lembap">${item.sensor1 || 0}%</span></td>
+            <td><span class="status-badge lembap" style="background:#e0f7fa; color:#006064;">${item.sensor2 || 0}%</span></td>
+            <td>
+              <span class="status-badge ${pompa1 === 'MENYALA' || pompa1 === 'ON' ? 'lembap' : 'kering'}">
+                ${pompa1}
+              </span>
+            </td>
+            <td>
+              <span class="status-badge ${pompa2 === 'MENYALA' || pompa2 === 'ON' ? 'lembap' : 'kering'}">
+                ${pompa2}
+              </span>
+            </td>
             <td style="text-align:center;">
               <button class="btn-hapus-row" title="Hapus baris ini"
                 onclick="window.konfirmasiHapusSatu('${item.id}', '${item.waktu || '-'}')">
@@ -621,80 +695,77 @@
       tbody.innerHTML = html;
     });
 
-    // ================= MODAL HELPERS =================
-    function bukaModal(title, desc){
+    // MODAL DIALOGS
+    function bukaModal(title, desc) {
       document.getElementById("modalTitle").innerText = title;
-      document.getElementById("modalDesc").innerText  = desc;
+      document.getElementById("modalDesc").innerText = desc;
       document.getElementById("modalHapus").classList.add("show");
     }
 
-    window.tutupModal = function(){
+    window.tutupModal = function() {
       document.getElementById("modalHapus").classList.remove("show");
-      pendingHapusId    = null;
+      pendingHapusId = null;
       pendingHapusSemua = false;
     };
 
-    // ================= KONFIRMASI HAPUS SATU BARIS =================
-    window.konfirmasiHapusSatu = function(id, waktu){
-      pendingHapusId    = id;
+    window.konfirmasiHapusSatu = function(id, waktu) {
+      pendingHapusId = id;
       pendingHapusSemua = false;
       bukaModal(
-        "Hapus Data Ini?",
-        `Data pada waktu "${waktu}" akan dihapus secara permanen dari Firebase. Lanjutkan?`
+        "Hapus Baris Riwayat?",
+        `Data riwayat pada "${waktu}" akan dihapus permanen dari Firebase.`
       );
     };
 
-    // ================= KONFIRMASI HAPUS SEMUA =================
-    window.konfirmasiHapusSemua = function(){
-      pendingHapusId    = null;
+    window.konfirmasiHapusSemua = function() {
+      pendingHapusId = null;
       pendingHapusSemua = true;
       bukaModal(
-        "Hapus Semua Riwayat?",
-        "Seluruh data riwayat monitoring akan dihapus secara permanen dari Firebase. Tindakan ini tidak dapat dibatalkan!"
+        "Hapus Seluruh Riwayat?",
+        "Tindakan ini akan menghapus semua riwayat monitoring dari database secara permanen!"
       );
     };
 
-    // ================= EKSEKUSI HAPUS =================
-    window.eksekusiHapus = async function(){
+    window.eksekusiHapus = async function() {
       const btnKonfirm = document.getElementById("btnKonfirmHapus");
-      const btnBatal   = document.getElementById("btnBatal");
+      const btnBatal = document.getElementById("btnBatal");
       btnKonfirm.disabled = true;
-      btnBatal.disabled   = true;
+      btnBatal.disabled = true;
       btnKonfirm.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Menghapus...`;
 
       try {
         if (pendingHapusSemua) {
-          // Hapus seluruh node /riwayat
           await remove(ref(db, "/riwayat"));
           tutupModal();
-          tampilToast("sukses", "✅ Semua riwayat berhasil dihapus!");
+          tampilToast("sukses", "✅ Semua riwayat berhasil dibersihkan!");
         } else if (pendingHapusId) {
-          // Hapus satu baris berdasarkan ID
           await remove(ref(db, `/riwayat/${pendingHapusId}`));
           tutupModal();
-          tampilToast("sukses", "✅ Data berhasil dihapus!");
+          tampilToast("sukses", "✅ Baris riwayat berhasil dihapus!");
         }
-      } catch(err) {
+      } catch (err) {
         console.error("Gagal menghapus:", err);
         tutupModal();
-        tampilToast("error", "❌ Gagal menghapus. Periksa koneksi/izin Firebase.");
+        tampilToast("error", "❌ Gagal menghapus data.");
+      } finally {
+        btnKonfirm.disabled = false;
+        btnBatal.disabled = false;
+        btnKonfirm.innerHTML = `<i class="fa-solid fa-trash-can"></i> Hapus`;
       }
     };
 
-    // ================= TOAST =================
-    function tampilToast(tipe, pesan){
+    // TOAST SHOW
+    function tampilToast(tipe, pesan) {
       const toast = document.getElementById("toast");
       document.getElementById("toastMsg").innerText = pesan;
       toast.className = `toast ${tipe} show`;
       setTimeout(() => { toast.classList.remove("show"); }, 3000);
     }
 
-    // Tutup modal jika klik di luar box
-    document.getElementById("modalHapus").addEventListener("click", function(e){
-      if(e.target === this) tutupModal();
+    // click outside modal to close
+    document.getElementById("modalHapus").addEventListener("click", function(e) {
+      if (e.target === this) tutupModal();
     });
-
   </script>
-
 </body>
 </html>
