@@ -794,9 +794,9 @@
         return;
       }
 
-      const statusPompa = data.status || "MATI";
+      const statusPompa = (data.status || "MATI").toString().toUpperCase();
       const terakhir = data.terakhir || "-";
-      const isOn = statusPompa === "MENYALA" || statusPompa === "ON";
+      const isOn = statusPompa === "MENYALA" || statusPompa === "ON" || statusPompa === "1";
 
       pumpStatusEl.textContent = isOn ? "ON" : "OFF";
       
