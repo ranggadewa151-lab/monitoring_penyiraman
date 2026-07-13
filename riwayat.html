@@ -617,7 +617,9 @@
 
   <!-- ================= FIREBASE LOGIC ================= -->
   <script type="module">
-    import { db, ref, onValue, query, orderByKey, limitToLast, remove } from "./firebase.js";
+    import { db, ref, onValue, get, query, orderByKey, limitToLast, remove } from "./firebase.js";
+
+    console.log("✅ Firebase module berhasil diimport");
 
     // profile username dari localStorage
     const loginUser = localStorage.getItem("loginUser") || "User";
@@ -626,17 +628,40 @@
     // STATE HAPUS
     let pendingHapusId = null;
     let pendingHapusSemua = false;
+    let dataLoaded = false;
 
-    // BACA RIWAYAT DARI FIREBASE
-    const riwayatRef = ref(db, "/riwayat");
-    const riwayatQuery = query(riwayatRef, orderByKey(), limitToLast(50));
+    // Timeout: jika data tidak muncul dalam 8 detik, coba fallback get()
+    setTimeout(async () => {
+      if (!dataLoaded) {
+        console.warn("⏰ Timeout: onValue tidak merespons, mencoba get()...");
+        try {
+          const snapshot = await get(ref(db, "riwayat"));
+          console.log("📥 [get] snapshot.exists():", snapshot.exists());
+          console.log("📥 [get] snapshot.val():", snapshot.val());
+          if (!dataLoaded) {
+            renderRiwayat(snapshot.val());
+          }
+        } catch (err) {
+          console.error("❌ [get] Error:", err);
+          const tbody = document.getElementById("riwayatBody");
+          tbody.innerHTML = `
+            <tr>
+              <td colspan="7" style="text-align:center;color:#ef4444;padding:30px;">
+                ❌ Gagal memuat data: ${err.message}<br>
+                <small style="color:#9ca3af;">Periksa Firebase Rules dan koneksi internet.</small>
+              </td>
+            </tr>`;
+        }
+      }
+    }, 8000);
 
-    onValue(riwayatQuery, (snapshot) => {
-      const data = snapshot.val();
+    // FUNGSI RENDER TABEL RIWAYAT
+    function renderRiwayat(data) {
       const tbody = document.getElementById("riwayatBody");
       const btnSemua = document.getElementById("btnHapusSemua");
 
       if (!data) {
+        console.warn("⚠️ Data riwayat kosong (null)");
         tbody.innerHTML = `
           <tr>
             <td colspan="7" style="text-align:center;color:#9ca3af;padding:30px;">
@@ -644,6 +669,7 @@
             </td>
           </tr>`;
         btnSemua.disabled = true;
+        dataLoaded = true;
         return;
       }
 
@@ -655,17 +681,17 @@
         ...data[key]
       }));
 
-      // Urutkan terbaru di atas
-      entries.sort((a, b) => {
-        if (a.waktu && b.waktu) return String(b.waktu).localeCompare(String(a.waktu));
-        return 0;
-      });
+      console.log("📊 Jumlah entri riwayat:", entries.length);
+      console.log("📊 Contoh entri:", entries[0]);
+
+      // Urutkan terbaru di atas (berdasarkan push key yang kronologis)
+      entries.reverse();
 
       // Generate tabel
       let html = "";
       entries.forEach((item, index) => {
-        const pompa1 = (item.pompa1 || item.pompa || "-").toUpperCase();
-        const pompa2 = (item.pompa2 || "-").toUpperCase();
+        const pompa1 = String(item.pompa1 || item.pompa || "-").toUpperCase();
+        const pompa2 = String(item.pompa2 || "-").toUpperCase();
 
         html += `
           <tr id="row-${item.id}">
@@ -693,6 +719,29 @@
       });
 
       tbody.innerHTML = html;
+      dataLoaded = true;
+      console.log("✅ Tabel riwayat berhasil dirender dengan", entries.length, "baris");
+    }
+
+    // BACA RIWAYAT DARI FIREBASE (tanpa query untuk menghindari masalah indexing)
+    const riwayatRef = ref(db, "riwayat");
+
+    console.log("🔄 Mendengarkan data riwayat dari Firebase...");
+
+    onValue(riwayatRef, (snapshot) => {
+      console.log("📥 [onValue] Data riwayat diterima!");
+      renderRiwayat(snapshot.val());
+    }, (error) => {
+      console.error("❌ [onValue] Error membaca riwayat:", error);
+      dataLoaded = true;
+      const tbody = document.getElementById("riwayatBody");
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="7" style="text-align:center;color:#ef4444;padding:30px;">
+            ❌ Gagal memuat data: ${error.message}<br>
+            <small style="color:#9ca3af;">Pastikan Firebase Rules mengizinkan baca pada path /riwayat</small>
+          </td>
+        </tr>`;
     });
 
     // MODAL DIALOGS
@@ -735,11 +784,11 @@
 
       try {
         if (pendingHapusSemua) {
-          await remove(ref(db, "/riwayat"));
+          await remove(ref(db, "riwayat"));
           tutupModal();
           tampilToast("sukses", "✅ Semua riwayat berhasil dibersihkan!");
         } else if (pendingHapusId) {
-          await remove(ref(db, `/riwayat/${pendingHapusId}`));
+          await remove(ref(db, `riwayat/${pendingHapusId}`));
           tutupModal();
           tampilToast("sukses", "✅ Baris riwayat berhasil dihapus!");
         }
