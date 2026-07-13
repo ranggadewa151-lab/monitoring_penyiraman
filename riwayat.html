@@ -635,136 +635,155 @@
       const data = snapshot.val();
       const tbody = document.getElementById("riwayatBody");
       const btnSemua = document.getElementById("btnHapusSemua");
+    document.addEventListener("DOMContentLoaded", () => {
+      // profile username dari localStorage
+      const loginUser = localStorage.getItem("loginUser") || "User";
+      document.getElementById("profileUsername").innerText = loginUser;
 
-      if (!data) {
-        tbody.innerHTML = `
-          <tr>
-            <td colspan="7" style="text-align:center;color:#9ca3af;padding:30px;">
-              Belum ada data riwayat.
-            </td>
-          </tr>`;
-        btnSemua.disabled = true;
-        return;
-      }
+      // STATE HAPUS
+      let pendingHapusId = null;
+      let pendingHapusSemua = false;
 
-      btnSemua.disabled = false;
+      // BACA RIWAYAT DARI FIREBASE
+      const riwayatRef = ref(db, "/riwayat");
+      const riwayatQuery = query(riwayatRef, orderByKey(), limitToLast(50));
 
-      // Konversi object ke array
-      const entries = Object.keys(data).map(key => ({
-        id: key,
-        ...data[key]
-      }));
+      onValue(riwayatQuery, (snapshot) => {
+        const data = snapshot.val();
+        console.log("Fetched data:", data);
+        const tbody = document.getElementById("riwayatBody");
+        const btnSemua = document.getElementById("btnHapusSemua");
 
-      // Urutkan terbaru di atas
-      entries.sort((a, b) => {
-        if (a.waktu && b.waktu) return String(b.waktu).localeCompare(String(a.waktu));
-        return 0;
-      });
-
-      // Generate tabel
-      let html = "";
-      entries.forEach((item, index) => {
-        const pompa1 = (item.pompa1 || item.pompa || "-").toUpperCase();
-        const pompa2 = (item.pompa2 || "-").toUpperCase();
-
-        html += `
-          <tr id="row-${item.id}">
-            <td>${index + 1}</td>
-            <td style="font-weight:600; color:#111827;">${item.waktu || "-"}</td>
-            <td><span class="status-badge lembap">${item.sensor1 || 0}%</span></td>
-            <td><span class="status-badge lembap" style="background:#e0f7fa; color:#006064;">${item.sensor2 || 0}%</span></td>
-            <td>
-              <span class="status-badge ${pompa1 === 'MENYALA' || pompa1 === 'ON' ? 'lembap' : 'kering'}">
-                ${pompa1}
-              </span>
-            </td>
-            <td>
-              <span class="status-badge ${pompa2 === 'MENYALA' || pompa2 === 'ON' ? 'lembap' : 'kering'}">
-                ${pompa2}
-              </span>
-            </td>
-            <td style="text-align:center;">
-              <button class="btn-hapus-row" title="Hapus baris ini"
-                onclick="window.konfirmasiHapusSatu('${item.id}', '${item.waktu || '-'}')">
-                <i class="fa-solid fa-trash-can"></i>
-              </button>
-            </td>
-          </tr>`;
-      });
-
-      tbody.innerHTML = html;
-    });
-
-    // MODAL DIALOGS
-    function bukaModal(title, desc) {
-      document.getElementById("modalTitle").innerText = title;
-      document.getElementById("modalDesc").innerText = desc;
-      document.getElementById("modalHapus").classList.add("show");
-    }
-
-    window.tutupModal = function() {
-      document.getElementById("modalHapus").classList.remove("show");
-      pendingHapusId = null;
-      pendingHapusSemua = false;
-    };
-
-    window.konfirmasiHapusSatu = function(id, waktu) {
-      pendingHapusId = id;
-      pendingHapusSemua = false;
-      bukaModal(
-        "Hapus Baris Riwayat?",
-        `Data riwayat pada "${waktu}" akan dihapus permanen dari Firebase.`
-      );
-    };
-
-    window.konfirmasiHapusSemua = function() {
-      pendingHapusId = null;
-      pendingHapusSemua = true;
-      bukaModal(
-        "Hapus Seluruh Riwayat?",
-        "Tindakan ini akan menghapus semua riwayat monitoring dari database secara permanen!"
-      );
-    };
-
-    window.eksekusiHapus = async function() {
-      const btnKonfirm = document.getElementById("btnKonfirmHapus");
-      const btnBatal = document.getElementById("btnBatal");
-      btnKonfirm.disabled = true;
-      btnBatal.disabled = true;
-      btnKonfirm.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Menghapus...`;
-
-      try {
-        if (pendingHapusSemua) {
-          await remove(ref(db, "/riwayat"));
-          tutupModal();
-          tampilToast("sukses", "✅ Semua riwayat berhasil dibersihkan!");
-        } else if (pendingHapusId) {
-          await remove(ref(db, `/riwayat/${pendingHapusId}`));
-          tutupModal();
-          tampilToast("sukses", "✅ Baris riwayat berhasil dihapus!");
+        if (!data) {
+          tbody.innerHTML = `
+            <tr>
+              <td colspan="7" style="text-align:center;color:#9ca3af;padding:30px;">
+                Belum ada data riwayat.
+              </td>
+            </tr>`;
+          btnSemua.disabled = true;
+          return;
         }
-      } catch (err) {
-        console.error("Gagal menghapus:", err);
-        tutupModal();
-        tampilToast("error", "❌ Gagal menghapus data.");
-      } finally {
-        btnKonfirm.disabled = false;
-        btnBatal.disabled = false;
-        btnKonfirm.innerHTML = `<i class="fa-solid fa-trash-can"></i> Hapus`;
+
+        btnSemua.disabled = false;
+
+        // Konversi object ke array
+        const entries = Object.keys(data).map(key => ({
+          id: key,
+          ...data[key]
+        }));
+
+        // Urutkan terbaru di atas
+        entries.sort((a, b) => {
+          if (a.waktu && b.waktu) return String(b.waktu).localeCompare(String(a.waktu));
+          return 0;
+        });
+
+        // Generate tabel
+        let html = "";
+        entries.forEach((item, index) => {
+          const pompa1 = (item.pompa1 || item.pompa || "-").toUpperCase();
+          const pompa2 = (item.pompa2 || "-").toUpperCase();
+
+          html += `
+            <tr id="row-${item.id}">
+              <td>${index + 1}</td>
+              <td style="font-weight:600; color:#111827;">${item.waktu || "-"}</td>
+              <td><span class="status-badge lembap">${item.sensor1 || 0}%</span></td>
+              <td><span class="status-badge lembap" style="background:#e0f7fa; color:#006064;">${item.sensor2 || 0}%</span></td>
+              <td>
+                <span class="status-badge ${pompa1 === 'MENYALA' || pompa1 === 'ON' ? 'lembap' : 'kering'}">
+                  ${pompa1}
+                </span>
+              </td>
+              <td>
+                <span class="status-badge ${pompa2 === 'MENYALA' || pompa2 === 'ON' ? 'lembap' : 'kering'}">
+                  ${pompa2}
+                </span>
+              </td>
+              <td style="text-align:center;">
+                <button class="btn-hapus-row" title="Hapus baris ini"
+                  onclick="window.konfirmasiHapusSatu('${item.id}', '${item.waktu || '-'}')">
+                  <i class="fa-solid fa-trash-can"></i>
+                </button>
+              </td>
+            </tr>`;
+        });
+
+        tbody.innerHTML = html;
+      });
+
+      // MODAL DIALOGS
+      function bukaModal(title, desc) {
+        document.getElementById("modalTitle").innerText = title;
+        document.getElementById("modalDesc").innerText = desc;
+        document.getElementById("modalHapus").classList.add("show");
       }
-    };
 
-    // TOAST SHOW
-    function tampilToast(tipe, pesan) {
-      const toast = document.getElementById("toast");
-      document.getElementById("toastMsg").innerText = pesan;
-      toast.className = `toast ${tipe} show`;
-      setTimeout(() => { toast.classList.remove("show"); }, 3000);
-    }
+      window.tutupModal = function() {
+        document.getElementById("modalHapus").classList.remove("show");
+        pendingHapusId = null;
+        pendingHapusSemua = false;
+      };
 
-    // click outside modal to close
-    document.getElementById("modalHapus").addEventListener("click", function(e) {
-      if (e.target === this) tutupModal();
+      window.konfirmasiHapusSatu = function(id, waktu) {
+        pendingHapusId = id;
+        pendingHapusSemua = false;
+        bukaModal(
+          "Hapus Baris Riwayat?",
+          `Data riwayat pada "${waktu}" akan dihapus permanen dari Firebase.`
+        );
+      };
+
+      window.konfirmasiHapusSemua = function() {
+        pendingHapusId = null;
+        pendingHapusSemua = true;
+        bukaModal(
+          "Hapus Seluruh Riwayat?",
+          "Tindakan ini akan menghapus semua riwayat monitoring dari database secara permanen!"
+        );
+      };
+
+      window.eksekusiHapus = async function() {
+        const btnKonfirm = document.getElementById("btnKonfirmHapus");
+        const btnBatal = document.getElementById("btnBatal");
+        btnKonfirm.disabled = true;
+        btnBatal.disabled = true;
+        btnKonfirm.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Menghapus...`;
+
+        try {
+          if (pendingHapusSemua) {
+            await remove(ref(db, "/riwayat"));
+            tutupModal();
+            tampilToast("sukses", "✅ Semua riwayat berhasil dibersihkan!");
+          } else if (pendingHapusId) {
+            await remove(ref(db, `/riwayat/${pendingHapusId}`));
+            tutupModal();
+            tampilToast("sukses", "✅ Baris riwayat berhasil dihapus!");
+          }
+        } catch (err) {
+          console.error("Gagal menghapus:", err);
+          tutupModal();
+          tampilToast("error", "❌ Gagal menghapus data.");
+        } finally {
+          btnKonfirm.disabled = false;
+          btnBatal.disabled = false;
+          btnKonfirm.innerHTML = `<i class="fa-solid fa-trash-can"></i> Hapus`;
+        }
+      };
+
+      // TOAST SHOW
+      function tampilToast(tipe, pesan) {
+        const toast = document.getElementById("toast");
+        document.getElementById("toastMsg").innerText = pesan;
+        toast.className = `toast ${tipe} show`;
+        setTimeout(() => { toast.classList.remove("show"); }, 3000);
+      }
+
+      // click outside modal to close
+      document.getElementById("modalHapus").addEventListener("click", function(e) {
+        if (e.target === this) tutupModal();
+      });
     });
   </script>
 </body>
