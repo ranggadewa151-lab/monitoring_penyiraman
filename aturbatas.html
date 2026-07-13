@@ -505,8 +505,8 @@
     get(sensor1Ref).then((snapshot) => {
       const data = snapshot.val();
       if (data) {
-        document.getElementById("kering1").value = data.bataskering !== undefined ? data.bataskering : "";
-        document.getElementById("lembap1").value = data.batslembab !== undefined ? data.batslembab : "";
+        document.getElementById("kering1").value = data.bataskering || "";
+        document.getElementById("lembap1").value = data.batslembab || "";
       }
     });
 
@@ -515,28 +515,28 @@
     get(sensor2Ref).then((snapshot) => {
       const data = snapshot.val();
       if (data) {
-        document.getElementById("kering2").value = data.bataskering !== undefined ? data.bataskering : "";
-        document.getElementById("lembap2").value = data.batslembab !== undefined ? data.batslembab : "";
+        document.getElementById("kering2").value = data.bataskering || "";
+        document.getElementById("lembap2").value = data.batslembab || "";
       }
     });
 
     // SIMPAN BATAS KE FIREBASE
     window.simpanData = function() {
-      const kering1Raw = document.getElementById("kering1").value.trim();
-      const lembap1Raw = document.getElementById("lembap1").value.trim();
-      const kering2Raw = document.getElementById("kering2").value.trim();
-      const lembap2Raw = document.getElementById("lembap2").value.trim();
+      const kering1 = Number(document.getElementById("kering1").value);
+      const lembap1 = Number(document.getElementById("lembap1").value);
+      const kering2 = Number(document.getElementById("kering2").value);
+      const lembap2 = Number(document.getElementById("lembap2").value);
 
-      if (kering1Raw === "" && lembap1Raw === "" && kering2Raw === "" && lembap2Raw === "") {
+      if (!kering1 && !lembap1 && !kering2 && !lembap2) {
         tampilToast("error", "❌ Harap isi minimal satu batas kelembapan!");
         return;
       }
 
       const updates = [];
-      if (kering1Raw !== "") updates.push(set(ref(db, "/sensor1/bataskering"), Number(kering1Raw)));
-      if (lembap1Raw !== "") updates.push(set(ref(db, "/sensor1/batslembab"), Number(lembap1Raw)));
-      if (kering2Raw !== "") updates.push(set(ref(db, "/sensor2/bataskering"), Number(kering2Raw)));
-      if (lembap2Raw !== "") updates.push(set(ref(db, "/sensor2/batslembab"), Number(lembap2Raw)));
+      updates.push(set(ref(db, "/sensor1/bataskering"), kering1));
+      updates.push(set(ref(db, "/sensor1/batslembab"), lembap1));
+      updates.push(set(ref(db, "/sensor2/bataskering"), kering2));
+      updates.push(set(ref(db, "/sensor2/batslembab"), lembap2));
 
       Promise.all(updates)
         .then(() => {

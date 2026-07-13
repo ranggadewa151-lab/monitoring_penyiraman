@@ -709,95 +709,13 @@
 
   <!-- ================= FIREBASE LOGIC ================= -->
   <script type="module">
-    import { db, ref, onValue, set, get, push, query, orderByKey, limitToLast } from "./firebase.js";
+    import { db, ref, onValue, query, orderByKey, limitToLast } from "./firebase.js";
 
     // profile username dari localStorage
     const loginUser = localStorage.getItem("loginUser") || "User";
     document.getElementById("profileUsername").innerText = loginUser;
 
     console.log("🔥 Firebase: Menghubungkan ke database...");
-
-    // ================= AUTO-SAVE RIWAYAT =================
-    // Menyimpan state terbaru dari sensor & pompa
-    let latestState = {
-      sensor1: null,
-      sensor2: null,
-      pompa1: null,
-      pompa2: null
-    };
-    let lastSavedSignature = ""; // Untuk cek apakah data benar-benar berubah
-    let saveTimer = null;
-    let isFirstLoad = { sensor1: true, sensor2: true, pompa1: true, pompa2: true };
-
-    // Format waktu lokal Indonesia
-    function getWaktuSekarang() {
-      const now = new Date();
-      const tanggal = now.toLocaleDateString("id-ID", {
-        day: "numeric",
-        month: "long",
-        year: "numeric"
-      });
-      const jam = now.toLocaleTimeString("id-ID", {
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: false
-      });
-      return `${tanggal} - ${jam} WIB`;
-    }
-
-    // Buat signature dari data untuk cek duplikasi
-    function getDataSignature() {
-      const s1 = latestState.sensor1?.kelembapan ?? "-";
-      const s2 = latestState.sensor2?.kelembapan ?? "-";
-      const p1 = latestState.pompa1?.status ?? "-";
-      const p2 = latestState.pompa2?.status ?? "-";
-      return `${s1}|${s2}|${p1}|${p2}`;
-    }
-
-    // Simpan riwayat ke Firebase (dengan debounce & deduplikasi)
-    function scheduleRiwayatSave() {
-      // Jangan simpan kalau masih first load (data belum lengkap)
-      if (isFirstLoad.sensor1 || isFirstLoad.sensor2 || isFirstLoad.pompa1 || isFirstLoad.pompa2) {
-        return;
-      }
-
-      // Debounce: tunggu 5 detik sebelum simpan (biar semua listener selesai update)
-      if (saveTimer) clearTimeout(saveTimer);
-      saveTimer = setTimeout(async () => {
-        const signature = getDataSignature();
-
-        // Jangan simpan kalau data tidak berubah dari terakhir
-        if (signature === lastSavedSignature) {
-          console.log("📋 Riwayat: Data tidak berubah, skip save.");
-          return;
-        }
-
-        // Siapkan data riwayat
-        const sensor1Val = latestState.sensor1?.kelembapan ?? 0;
-        const sensor2Val = latestState.sensor2?.kelembapan ?? 0;
-        const pompa1Status = (latestState.pompa1?.status || "MATI").toString().toUpperCase();
-        const pompa2Status = (latestState.pompa2?.status || "MATI").toString().toUpperCase();
-        const pompa1Display = (pompa1Status === "MENYALA" || pompa1Status === "ON" || pompa1Status === "1") ? "MENYALA" : "MATI";
-        const pompa2Display = (pompa2Status === "MENYALA" || pompa2Status === "ON" || pompa2Status === "1") ? "MENYALA" : "MATI";
-
-        const riwayatData = {
-          waktu: getWaktuSekarang(),
-          sensor1: sensor1Val,
-          sensor2: sensor2Val,
-          pompa1: pompa1Display,
-          pompa2: pompa2Display
-        };
-
-        try {
-          const riwayatRef = ref(db, "/riwayat");
-          await push(riwayatRef, riwayatData);
-          lastSavedSignature = signature;
-          console.log("✅ Riwayat tersimpan:", riwayatData);
-        } catch (err) {
-          console.error("❌ Gagal simpan riwayat:", err.message);
-        }
-      }, 5000);
-    }
 
     // Helper: Tentukan status berdasarkan kelembapan
     function getStatus(value, batasKering, batasLembab) {
@@ -844,14 +762,6 @@
         return;
       }
       updateSensor(1, data);
-      latestState.sensor1 = data;
-      if (isFirstLoad.sensor1) {
-        isFirstLoad.sensor1 = false;
-        // Set initial signature agar tidak langsung save saat pertama buka
-        lastSavedSignature = lastSavedSignature || getDataSignature();
-      } else {
-        scheduleRiwayatSave();
-      }
     }, (error) => {
       console.error("❌ Sensor 1 error:", error.message);
       showSensorError(1, "ERROR");
@@ -866,13 +776,6 @@
         return;
       }
       updateSensor(2, data);
-      latestState.sensor2 = data;
-      if (isFirstLoad.sensor2) {
-        isFirstLoad.sensor2 = false;
-        lastSavedSignature = lastSavedSignature || getDataSignature();
-      } else {
-        scheduleRiwayatSave();
-      }
     }, (error) => {
       console.error("❌ Sensor 2 error:", error.message);
       showSensorError(2, "ERROR");
@@ -909,13 +812,6 @@
     onValue(pompaRef, (snapshot) => {
       const data = snapshot.val();
       updatePompa("pumpStatus", "pumpCard1", data);
-      latestState.pompa1 = data;
-      if (isFirstLoad.pompa1) {
-        isFirstLoad.pompa1 = false;
-        lastSavedSignature = lastSavedSignature || getDataSignature();
-      } else {
-        scheduleRiwayatSave();
-      }
     }, (error) => {
       console.error("❌ Pompa 1 error:", error.message);
       document.getElementById("pumpStatus").textContent = "ERROR";
@@ -927,13 +823,6 @@
     onValue(pompa2Ref, (snapshot) => {
       const data = snapshot.val();
       updatePompa("pump2Status", "pumpCard2", data);
-      latestState.pompa2 = data;
-      if (isFirstLoad.pompa2) {
-        isFirstLoad.pompa2 = false;
-        lastSavedSignature = lastSavedSignature || getDataSignature();
-      } else {
-        scheduleRiwayatSave();
-      }
     }, (error) => {
       console.error("❌ Pompa 2 error:", error.message);
       document.getElementById("pump2Status").textContent = "ERROR";
