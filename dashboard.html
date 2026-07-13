@@ -709,7 +709,7 @@
 
   <!-- ================= FIREBASE LOGIC ================= -->
   <script type="module">
-    import { db, ref, onValue, query, orderByKey, limitToLast } from "./firebase.js";
+    import { db, ref, onValue } from "./firebase.js";
 
     // profile username dari localStorage
     const loginUser = localStorage.getItem("loginUser") || "User";
@@ -781,18 +781,21 @@
       showSensorError(2, "ERROR");
     });
 
-    // UPDATE POMPA UI (Hanya status aktif/mati, waktu diambil dari riwayat)
-    function updatePompa(statusElId, cardId, data) {
+    // UPDATE POMPA UI
+    function updatePompa(statusElId, timeElId, cardId, data) {
       const pumpStatusEl = document.getElementById(statusElId);
+      const pumpLastTimeEl = document.getElementById(timeElId);
       const cardEl = document.getElementById(cardId);
 
       if (!data) {
         pumpStatusEl.textContent = "OFF";
         cardEl.className = "pump-card pump-off";
+        pumpLastTimeEl.textContent = "Penyiraman terakhir: -";
         return;
       }
 
       const statusPompa = (data.status || "MATI").toString().toUpperCase();
+      const terakhir = data.terakhir || "-";
       const isOn = statusPompa === "MENYALA" || statusPompa === "ON" || statusPompa === "1";
 
       pumpStatusEl.textContent = isOn ? "ON" : "OFF";
@@ -805,13 +808,15 @@
         cardEl.classList.remove("pump-on");
         cardEl.classList.add("pump-off");
       }
+
+      pumpLastTimeEl.textContent = "Penyiraman terakhir: " + terakhir;
     }
 
     // POMPA 1
     const pompaRef = ref(db, "/pompa1");
     onValue(pompaRef, (snapshot) => {
       const data = snapshot.val();
-      updatePompa("pumpStatus", "pumpCard1", data);
+      updatePompa("pumpStatus", "pumpLastTime", "pumpCard1", data);
     }, (error) => {
       console.error("❌ Pompa 1 error:", error.message);
       document.getElementById("pumpStatus").textContent = "ERROR";
@@ -822,62 +827,11 @@
     const pompa2Ref = ref(db, "/pompa2");
     onValue(pompa2Ref, (snapshot) => {
       const data = snapshot.val();
-      updatePompa("pump2Status", "pumpCard2", data);
+      updatePompa("pump2Status", "pump2LastTime", "pumpCard2", data);
     }, (error) => {
       console.error("❌ Pompa 2 error:", error.message);
       document.getElementById("pump2Status").textContent = "ERROR";
       document.getElementById("pumpCard2").className = "pump-card pump-off";
-    });
-
-    // BACA RIWAYAT UNTUK MENGAMBIL WAKTU PENYIRAMAN TERAKHIR
-    const riwayatRef = ref(db, "/riwayat");
-    const riwayatQuery = query(riwayatRef, orderByKey(), limitToLast(100));
-    
-    onValue(riwayatQuery, (snapshot) => {
-      const data = snapshot.val();
-      const pumpLastTimeEl = document.getElementById("pumpLastTime");
-      const pump2LastTimeEl = document.getElementById("pump2LastTime");
-
-      if (!data) {
-        pumpLastTimeEl.textContent = "Penyiraman terakhir: -";
-        pump2LastTimeEl.textContent = "Penyiraman terakhir: -";
-        return;
-      }
-
-      // Konversi object ke array
-      const entries = Object.keys(data).map(key => ({
-        id: key,
-        ...data[key]
-      }));
-
-      // Urutkan dari yang terbaru (push key di Firebase bersifat kronologis, jadi kita tinggal reverse)
-      entries.reverse();
-
-      // Cari waktu terakhir pompa 1 menyala
-      const lastWatering1 = entries.find(item => {
-        const p1 = (item.pompa1 || item.pompa || "").toUpperCase();
-        return p1 === "MENYALA" || p1 === "ON" || p1 === "1";
-      });
-
-      // Cari waktu terakhir pompa 2 menyala
-      const lastWatering2 = entries.find(item => {
-        const p2 = (item.pompa2 || "").toUpperCase();
-        return p2 === "MENYALA" || p2 === "ON" || p2 === "1";
-      });
-
-      // Update tampilan Pompa 1
-      if (lastWatering1) {
-        pumpLastTimeEl.textContent = "Penyiraman terakhir: " + (lastWatering1.waktu || "-");
-      } else {
-        pumpLastTimeEl.textContent = "Penyiraman terakhir: -";
-      }
-
-      // Update tampilan Pompa 2
-      if (lastWatering2) {
-        pump2LastTimeEl.textContent = "Penyiraman terakhir: " + (lastWatering2.waktu || "-");
-      } else {
-        pump2LastTimeEl.textContent = "Penyiraman terakhir: -";
-      }
     });
   </script>
 
